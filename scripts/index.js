@@ -8,7 +8,7 @@
 // A growing collection of simple html5 canvas games.
 // Games:
 // Go Pong Yourself
-// Tennis (coming soon)
+// Some Tennis Game (coming soon)
 // **************************************************************************************
 
 /** debug mode? */

@@ -1,0 +1,22 @@
+// config for VSCode intellisense
+{
+    "compilerOptions": {
+        "module": "commonjs",
+        "target": "es2020",
+        "jsx": "preserve",
+        "strictFunctionTypes": true
+    },
+    "exclude": [ "" ],
+    "include": [
+        "**/scripts/index.js",
+        "**/scripts/static/Images.js",
+        "**/scripts/testScreens.js",
+        "**/scripts/classes/Game.js",
+        "**/scripts/classes/GameState.js",
+        "**/scripts/classes/GameManager.js",
+        "**/scripts/static/ColorPaletts.js",
+        "**/scripts/static/Drawing.js",
+        "**/scripts/static/Buttons.js",
+        "**/games/GoPongYourself.js",
+    ]
+}

@@ -21,10 +21,15 @@
  * @param {number} boxWidth
  * @param {number} boxHeight
  * @param {string} fillColor
+ * @param {number} transparency 0 to 1 alpha value, default: 1
  */
-function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor) {
+function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, transparency = null) {
+    if (transparency != null) { canvasContext.globalAlpha = transparency; }
+
     canvasContext.fillStyle = fillColor;
     canvasContext.fillRect(topLeftX, topLeftY, boxWidth, boxHeight);
+
+    if (transparency != null) { canvasContext.globalAlpha = 1; }
 }
 
 

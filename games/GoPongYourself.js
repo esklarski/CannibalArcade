@@ -172,6 +172,7 @@ class GoPongYourself extends Game {
 
     /** @override */
     PauseOverlay() {
+        colorRect(0, 0, canvas.width, canvas.height, 'black', 0.5);
         colorText("press SPACE to resume",
             canvas.width / 2, canvas.height / 4, this.#textColor, 'center');
 

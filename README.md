@@ -15,3 +15,9 @@ Currently the major feature is the GameManager that allows for games to be loade
 This is a self-driven tutorial sort of project I am working on in my free time.
 
 Enjoy.
+
+# Game List:
+1. Go Pong Yourself
+   - Simple 4-way paddle game, solo play, go for a personal high score.
+<!-- 2. Some 'Tennis' Game
+   - boring -->

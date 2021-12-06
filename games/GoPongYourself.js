@@ -3,7 +3,7 @@
 /**
  * @author Evan Sklarski <esklarski@gmail.com>
  * @version 0.1
- * @see {@link }
+ * @see {@link - https://esklarski.github.io/CannibalArcade/}
  */
 // Go Pong yourself and have a good time.
 // Simple 4-way paddle game, solo play, go for a personal high score.

@@ -318,6 +318,7 @@ class GoPongYourself extends Game {
 
 
     // ************************ GoPongYourself FUNCTIONS ********************************
+    /** draw game frame */
     #drawFrame() {    
         this.#drawGameBackground();
 
@@ -374,6 +375,8 @@ class GoPongYourself extends Game {
         }
     }
 
+
+    /** move paddles and balls */
     #moveEverything() {
         var rebounded = false;
         var volleyed = false;
@@ -441,7 +444,6 @@ class GoPongYourself extends Game {
             // practice mode switch
             if (this.#practice) {
                 this.#volleys = 0;
-                // TODO create "Exit to Title" button or event
             }
             else {
                 // save max score
@@ -461,8 +463,7 @@ class GoPongYourself extends Game {
     }
 
 
-    // check to keep paddles on screen
-    // Y paddles
+    /** check to keep Y paddles on screen */
     #paddleCheckY(paddleYPos) {
         if (paddleYPos < MARGIN) {
             paddleYPos = MARGIN;
@@ -473,7 +474,7 @@ class GoPongYourself extends Game {
 
         return paddleYPos;
     }
-    // X paddles
+    /** check to keep X paddles on screen */
     #paddleCheckX(paddleXPos) {
         if (paddleXPos < MARGIN) {
             paddleXPos = MARGIN;
@@ -486,7 +487,7 @@ class GoPongYourself extends Game {
     }
 
 
-    // serve ball with random vector
+    /** serve ball with random vector */
     #serve() {
         // random X vector
         var ballXdirection = (Math.random() < 0.6) ? -1 : 1;
@@ -507,7 +508,7 @@ class GoPongYourself extends Game {
     }
 
 
-    // enforce MIN and MAX ball speed
+    /** enforce MIN and MAX ball speed */
     #ballSpeedCheck() {
         var Xdirection = this.#ballSpeedX / Math.abs(this.#ballSpeedX);
         var Xmagnitude = Math.abs(this.#ballSpeedX);
@@ -531,7 +532,7 @@ class GoPongYourself extends Game {
     }
 
 
-    // calculate rebound speed
+    /** calculate rebound speed */
     #rebound(paddlePos, ballPos) {
         var delta = ballPos - (paddlePos + this.#PADDLE_WIDTH / 2);
         return ( delta / (this.#PADDLE_WIDTH / 2) ) * this.#PADDLE_CURVE;

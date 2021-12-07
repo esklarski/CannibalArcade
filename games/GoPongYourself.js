@@ -163,7 +163,7 @@ class GoPongYourself extends Game {
         }
         else {
             canvas.removeEventListener('mousemove', this.#mouseMoveEvent);
-            if (gameManager.GameState != GameState.Pause) {
+            if (gameManager.State != GameState.Paused) {
                 document.removeEventListener('keydown', this.#keyPressEvent);
             }
         }
@@ -266,7 +266,7 @@ class GoPongYourself extends Game {
                         this.TitleScreen();
                     }
 
-                    if (isInButton(mousePos, buttonCorner3)) { exitGame(); }
+                    if (isInButton(mousePos, buttonCorner3)) { gameManager.ExitGame(); }
 
                     // buttonCorner4 - instructions // TODO
                     // if (isInButton(mousePos, buttonCorner4)) { gameManager.Instructions(); }

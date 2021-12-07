@@ -71,7 +71,7 @@ let gameManager;
  */
 const GAMES = {
     GoPongYourself: new GoPongYourself(),
-    // SomeTennisGame: new SomeTennisGame();
+    SomeTennisGame: new SomeTennisGame()
 }
 
 
@@ -154,7 +154,7 @@ function loadGame(game) {
 
 
 /** exit current game, return to game select */
-function exitGame() {
+function exitCurrentGame() {
     gameMenu();
 }
 
@@ -184,7 +184,7 @@ function selectGame(evt) {
     var mousePos = calculateMousePosition(evt);
 
     if (isInButton(mousePos, buttonLge7)) { loadGame(GAMES.GoPongYourself); return; }
-    if (isInButton(mousePos, buttonLge8)) { toggle2 = toggleState(toggle2); }
+    if (isInButton(mousePos, buttonLge8)) { loadGame(GAMES.SomeTennisGame); return; }
     if (isInButton(mousePos, buttonLge9)) { toggle3 = toggleState(toggle3); }
     if (isInButton(mousePos, buttonLge10)) { toggle4 = toggleState(toggle4); }
 

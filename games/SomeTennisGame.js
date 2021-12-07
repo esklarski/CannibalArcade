@@ -21,8 +21,6 @@
  * @extends Game
  */
 class SomeTennisGame extends Game {
-    // TODO:
-    // - fix colors, currently referencing unavailable varables
     // colors
     #textColor = DisneylandParisCastle["LIGHTPINK"];
     #buttonColor = DisneylandParisCastle["LIGHTPINK"];

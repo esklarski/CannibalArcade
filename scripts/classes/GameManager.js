@@ -40,11 +40,20 @@ class GameManager {
 
 
     // ******************************** BASIC METHODS ***********************************
+    /** start arcade: draw game select screen */
+    Start() {
+        this.#setState(GameState.Menu);
+    }
+
+
     /**
      * load game
      * @param {Game} game
      */
     LoadGame(game) {
+        // turn off evenets
+        this.#gameMenuEvents(false);
+
         this.#game = game;
 
         // initialize game properties
@@ -54,11 +63,17 @@ class GameManager {
         this.Title();
     }
 
+
     /** unload current game and return to game select */
     ExitGame() {
+        // turn off evenets
         this.#game.UiEvents(false);
+
+        // null current game
         this.#game = null;
-        exitCurrentGame();
+
+        // go to menu screen
+        this.Start();
     }
 
 
@@ -66,6 +81,7 @@ class GameManager {
     get State() {
         return this.#gameState;
     }
+
 
     /** @returns {number} frame interval in ms */
     get Interval() {
@@ -107,7 +123,7 @@ class GameManager {
     #setState(newState) {
         this.#gameState = newState;
 
-        if (this.#gameState == GameState.Title || this.#gameState == GameState.Playing) {
+        if (this.#gameState == GameState.Title || this.#gameState == GameState.Playing || this.#gameState == GameState.Menu) {
             this.#execute();
         }
     }
@@ -118,6 +134,12 @@ class GameManager {
     /** main logic loop */
     #execute() {
         switch (this.#gameState) {
+            case
+                GameState.Menu: {
+                    this.#gameMenuEvents(true);
+                    this.#drawGameMenu();
+                }
+                break;
             case
                 GameState.Title: {
                     this.#game.GameEvents(false);
@@ -177,5 +199,70 @@ class GameManager {
     #stopGame() {
         clearInterval(this.#gameLoop);
         this.#gameLoop = null;
+    }
+    
+
+
+    // ***************************** GAME MENU SCREEN ***********************************
+    #menuEvent = null;
+    /** toggle game menu events */
+    #gameMenuEvents(on) {
+        if (this.#menuEvent == null) {
+            this.#menuEvent = this.#selectGame.bind(this);
+        }
+
+        if (on) {
+            canvas.addEventListener('mousedown', this.#menuEvent);
+        }
+        else {
+            canvas.removeEventListener('mousedown', this.#menuEvent);
+        }
+    }
+
+
+    /**
+     * game menu event handler
+     * @param {Event} evt
+     */
+    #selectGame(evt) {
+        var mousePos = calculateMousePosition(evt);
+
+        if (isInButton(mousePos, buttonLge7)) { gameManager.LoadGame(GAMES.GoPongYourself); return; }
+        if (isInButton(mousePos, buttonLge8)) { gameManager.LoadGame(GAMES.SomeTennisGame); return; }
+        if (isInButton(mousePos, buttonLge9)) { toggle3 = toggleState(toggle3); }
+        if (isInButton(mousePos, buttonLge10)) { toggle4 = toggleState(toggle4); }
+
+        this.#drawGameMenu();
+    }
+
+
+    /** draw game select menu */
+    #drawGameMenu() {
+        // colors
+        let GREY = Luxury['GREY'];
+        let SALMON = Luxury['SALMON'];
+        let MIDNIGHT = Luxury['MIDNIGHT'];
+        let BLACK = Luxury['BLACK'];
+        let BEIGE = Luxury['BEIGE'];
+
+        colorRect(0, 0, canvas.width, canvas.height, MIDNIGHT);
+
+        // title
+        colorText('Welcome to', canvasCenter.x, 60, SALMON, 'center', LARGE_FONT);
+        colorText('the', canvasCenter.x - 250, 90, SALMON, 'center', SMALL_FONT);
+        colorText('Cannibal Arcade', canvasCenter.x, 140, SALMON, 'center', LARGE_FONT);
+
+        // click to play
+        colorText("Choose your game.", canvasCenter.x, 220, GREY, 'center');
+
+        // buttons
+        canvasContext.drawImage(
+            imgGPY, canvasCenter.x + buttonLge7.x, canvasCenter.y + buttonLge7.y);
+        canvasContext.drawImage(
+            imgSTG, canvasCenter.x + buttonLge8.x, canvasCenter.y + buttonLge8.y);
+        drawButton(buttonLge9,
+            'Coming Later', toggle3 ? BEIGE : BLACK, toggle3 ? SALMON : MIDNIGHT);
+        drawButton(buttonLge10,
+            'Coming Maybe', toggle4 ? BEIGE : BLACK, toggle4 ? SALMON : MIDNIGHT);
     }
 }

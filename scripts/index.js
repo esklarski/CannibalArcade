@@ -7,8 +7,8 @@
  */
 // A growing collection of simple html5 canvas games.
 // Games:
-// Go Pong Yourself
-// Some Tennis Game (coming soon)
+//   - Go Pong Yourself
+//   - Some Tennis Game
 // **************************************************************************************
 
 /** debug mode? */
@@ -214,8 +214,8 @@ function drawGameMenu() {
     // buttons
     canvasContext.drawImage(
         imgGPY, canvasCenter.x + buttonLge7.x, canvasCenter.y + buttonLge7.y);
-    drawButton(buttonLge8,
-        'Coming Soon', toggle2 ? BEIGE : BLACK, toggle2 ? SALMON : MIDNIGHT);
+    canvasContext.drawImage(
+        imgSTG, canvasCenter.x + buttonLge8.x, canvasCenter.y + buttonLge8.y);
     drawButton(buttonLge9,
         'Coming Later', toggle3 ? BEIGE : BLACK, toggle3 ? SALMON : MIDNIGHT);
     drawButton(buttonLge10,

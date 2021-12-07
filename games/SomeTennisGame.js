@@ -32,7 +32,7 @@ class SomeTennisGame extends Game {
     #paddle2Color = DisneylandParisCastle["LIGHTBLUE"];
 
     // AI
-    #AI_SPEED = 3;
+    #AI_SPEED = 4;
     #AI = true;
 
     // ball

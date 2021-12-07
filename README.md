@@ -19,5 +19,5 @@ Enjoy.
 # Game List:
 1. Go Pong Yourself
    - Simple 4-way paddle game, solo play, go for a personal high score.
-<!-- 2. Some 'Tennis' Game
-   - boring -->
+2. Some Tennis Game
+   - Play a more traditional 'Tennis' game vs a mediocre AI

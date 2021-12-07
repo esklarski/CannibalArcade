@@ -65,15 +65,6 @@ let root;
  */
 let gameManager;
 
-/**
- * available games
- * @type {Game[]}
- */
-const GAMES = {
-    GoPongYourself: new GoPongYourself(),
-    SomeTennisGame: new SomeTennisGame()
-}
-
 
 
 // ********************************** INITIALIZATION ************************************

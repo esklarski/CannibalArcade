@@ -50,7 +50,7 @@ class SomeTennisGame extends Game {
     #paddle2Y;
 
     // score
-    #WIN_SCORE = 1;
+    #WIN_SCORE = 10;
     #player1Score;
     #player2Score;
     #winner;

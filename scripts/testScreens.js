@@ -1,3 +1,4 @@
+"use strict"
 // *********************************** TEST SCREENS *************************************
 
 /** valid test screen strings */

@@ -1,3 +1,4 @@
+"use strict"
 // *********************************** GAME IMAGES **************************************
 
 /** game select picture for Go Pong Yourself */

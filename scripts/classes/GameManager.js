@@ -13,13 +13,13 @@ class GameManager {
     static TARGET_FPS = 59; // for some reason 59 seems smoother than 60
 
     /** @type {number} frame time in ms */
-    #frameInterval = Math.ceil(1000 / GameManager.TARGET_FPS);
+    #frameInterval;
 
     /** @type {number} store interval id */
-    #gameLoop = null;
+    #gameLoop;
 
     /** @type {string} current game state */
-    #gameState = GameState.Title;
+    #gameState;
 
      /** {@link Game} currently loaded game */
     #game;
@@ -29,21 +29,33 @@ class GameManager {
      * @constructor
      * {@link GameManager}
      */
-     constructor() {  }
+    constructor() {
+        this.#frameInterval = Math.ceil(1000 / GameManager.TARGET_FPS);
+        this.#gameLoop = null;
+        this.#gameState = GameState.Title;
+        this.#game = null;
+    }
 
-     /**
-      * load game
-      * @param {Game} game
-      */
-     LoadGame(game) {
-         this.#game = game;
- 
-         // initialize game properties
-         this.ResetGame();
-     
-         // start game
-         this.Title();
-     }
+    /**
+     * load game
+     * @param {Game} game
+     */
+    LoadGame(game) {
+        this.#game = game;
+
+        // initialize game properties
+        this.ResetGame();
+
+        // start game
+        this.Title();
+    }
+
+    /** unload current game and return to game select */
+    ExitGame() {
+        this.#game.UiEvents(false);
+        this.#game = null;
+        exitCurrentGame();
+    }
 
 
     /** @returns {string} current game state */

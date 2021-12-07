@@ -25,6 +25,7 @@ class GameManager {
     #game;
 
 
+
     /**
      * @constructor
      * {@link GameManager}
@@ -36,6 +37,9 @@ class GameManager {
         this.#game = null;
     }
 
+
+
+    // ******************************** BASIC METHODS ***********************************
     /**
      * load game
      * @param {Game} game
@@ -69,6 +73,8 @@ class GameManager {
     }
 
 
+
+    // ******************************** STATE CHANGES ***********************************
     // public state selectors
     /** {@link Title} - set GameState.Title */
     Title() { this.#setState(GameState.Title); }
@@ -107,6 +113,8 @@ class GameManager {
     }
 
 
+
+    // ********************************** MAIN LOOP *************************************
     /** main logic loop */
     #execute() {
         switch (this.#gameState) {
@@ -153,6 +161,8 @@ class GameManager {
     }
 
 
+
+    // ***************************** GAME LOOP CONTROL **********************************
     /** start render cycle */
     #startGame() {
         let loop = this.#execute.bind(this);
@@ -168,4 +178,4 @@ class GameManager {
         clearInterval(this.#gameLoop);
         this.#gameLoop = null;
     }
- }
+}

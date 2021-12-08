@@ -96,7 +96,7 @@ class SomeTennisGame extends Game {
 
         colorText("Press Space bar to pause game.", canvasCenter.x, canvasCenter.y + 225, this.#textColor, 'center', SMALL_FONT);
 
-        drawButton(buttonCorner3, "Exit Game", this.#buttonColor, this.#buttonTextColor);
+        drawButton(buttonCorner3, "Exit Game", this.#buttonTextColor, this.#buttonColor);
     }
 
     /** @override */
@@ -145,7 +145,7 @@ class SomeTennisGame extends Game {
 
     /** @override */
     PauseOverlay() {
-        colorRect(0, 0, canvas.width, canvas.height, 'black', 0.5);
+        colorRect(0, 0, canvas.width, canvas.height, this.#lineColor, 0.5);
         colorText("press SPACE to resume",
             canvas.width / 2, canvas.height / 4, this.#textColor, 'center');
 
@@ -164,7 +164,7 @@ class SomeTennisGame extends Game {
 
         // button
         drawButton(button5, "again?", this.#buttonColor, this.#buttonTextColor);
-        drawButton(buttonCorner3, "Exit to Title", this.#buttonColor, this.#buttonTextColor);
+        drawButton(buttonCorner3, "Exit to Title", this.#buttonTextColor, this.#buttonColor);
     }
 
     /** @override */
@@ -262,7 +262,7 @@ class SomeTennisGame extends Game {
     /** move everything that needs moving */
     #moveEverything() {
         // left goal
-        if (this.#ballX < MARGIN*4) {
+        if (this.#ballX < MARGIN + this.#PADDLE_THICKNESS) {
             // bounce off paddle
             if (this.#ballY > this.#paddle1Y && this.#ballY < this.#paddle1Y + this.#PADDLE_HEIGHT) {
                 this.#ballSpeedX *= -1;
@@ -278,7 +278,7 @@ class SomeTennisGame extends Game {
         }
 
         // right goal
-        if (this.#ballX > canvas.width - MARGIN*4) {
+        if (this.#ballX > canvas.width - MARGIN - this.#PADDLE_THICKNESS) {
             // bounce off paddle
             if (this.#ballY > this.#paddle2Y && this.#ballY < this.#paddle2Y + this.#PADDLE_HEIGHT) {
                 this.#ballSpeedX *= -1;
@@ -346,8 +346,8 @@ class SomeTennisGame extends Game {
 
     /** draw scores in screen corners */    
     #drawScore() {
-        colorText(this.#player1Score, MARGIN, canvas.height - MARGIN * 2, this.#textColor, 'start')
-        colorText(this.#player2Score, canvas.width - MARGIN, canvas.height - MARGIN * 2, this.#textColor, 'end');
+        colorText(this.#player1Score, MARGIN * 2, canvas.height - MARGIN * 2, this.#textColor, 'start')
+        colorText(this.#player2Score, canvas.width - MARGIN * 2, canvas.height - MARGIN * 2, this.#textColor, 'end');
     }
 
 

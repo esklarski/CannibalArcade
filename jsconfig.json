@@ -18,6 +18,7 @@
         "**/scripts/static/Drawing.js",
         "**/scripts/static/Buttons.js",
         "**/games/GoPongYourself.js",
-        "**/games/SomeTennisGame.js"
+        "**/games/SomeTennisGame.js",
+        "**/scripts/static/GamesLibrary.js"
     ]
 }

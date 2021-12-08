@@ -1,4 +1,4 @@
-"use strict"
+"use strict";
 /**
  * available games
  * @type {Game[]}

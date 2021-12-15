@@ -224,7 +224,7 @@ class GameManager {
 
         if (isInButton(mousePos, buttonLge7)) { gameManager.LoadGame( new GoPongYourself() ); return; }
         if (isInButton(mousePos, buttonLge8)) { gameManager.LoadGame( new SomeTennisGame() ); return; }
-        if (isInButton(mousePos, buttonLge9)) { toggle3 = toggleState(toggle3); }
+        if (isInButton(mousePos, buttonLge9)) { gameManager.LoadGame( new BreakBricks() ); return; }
         if (isInButton(mousePos, buttonLge10)) { toggle4 = toggleState(toggle4); }
 
         this.#drawGameMenu();
@@ -255,8 +255,8 @@ class GameManager {
             imgGPY, canvasCenter.x + buttonLge7.x, canvasCenter.y + buttonLge7.y);
         canvasContext.drawImage(
             imgSTG, canvasCenter.x + buttonLge8.x, canvasCenter.y + buttonLge8.y);
-        drawButton(buttonLge9,
-            'Coming Later', toggle3 ? BEIGE : BLACK, toggle3 ? SALMON : MIDNIGHT);
+        canvasContext.drawImage(
+            imgBB, canvasCenter.x + buttonLge9.x, canvasCenter.y + buttonLge9.y);
         drawButton(buttonLge10,
             'Coming Maybe', toggle4 ? BEIGE : BLACK, toggle4 ? SALMON : MIDNIGHT);
     }

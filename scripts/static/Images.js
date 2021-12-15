@@ -10,3 +10,9 @@ imgGPY.onload = () => { };
 let imgSTG = new Image();
 imgSTG.src = 'images/SomeTennisGame.jpg';
 imgSTG.onload = () => { };
+
+
+/** game select picture for Some Tennis Game */
+let imgBB = new Image();
+imgBB.src = 'images/BreakBricks.jpg';
+imgBB.onload = () => { };

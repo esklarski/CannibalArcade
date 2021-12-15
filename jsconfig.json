@@ -8,17 +8,18 @@
     },
     "exclude": [ "" ],
     "include": [
-        "**/scripts/index.js",
-        "**/scripts/static/Images.js",
-        "**/scripts/testScreens.js",
-        "**/scripts/classes/Game.js",
-        "**/scripts/static/GameState.js",
-        "**/scripts/classes/GameManager.js",
-        "**/scripts/static/ColorPaletts.js",
-        "**/scripts/static/Drawing.js",
-        "**/scripts/static/Buttons.js",
-        "**/games/GoPongYourself.js",
-        "**/games/SomeTennisGame.js",
-        "**/scripts/static/GamesLibrary.js"
+        "scripts/index.js",
+        "scripts/static/Images.js",
+        "scripts/testScreens.js",
+        "scripts/classes/Game.js",
+        "scripts/static/GameState.js",
+        "scripts/classes/GameManager.js",
+        "scripts/static/ColorPaletts.js",
+        "scripts/static/Drawing.js",
+        "scripts/static/Buttons.js",
+        "games/GoPongYourself.js",
+        "games/SomeTennisGame.js",
+        "games/BreakBricks.js",
+        "scripts/static/GamesLibrary.js"
     ]
 }

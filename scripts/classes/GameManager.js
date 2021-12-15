@@ -30,7 +30,7 @@ class GameManager {
      */
     constructor() {
         this.#gameLoop = null;
-        this.#gameState = GameState.Title;
+        this.#gameState = GameState.Menu;
         this.#game = null;
     }
 

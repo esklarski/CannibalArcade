@@ -240,15 +240,15 @@ class GameManager {
         let BLACK = Luxury['BLACK'];
         let BEIGE = Luxury['BEIGE'];
 
-        colorRect(0, 0, canvas.width, canvas.height, MIDNIGHT);
+        drawRect(0, 0, canvas.width, canvas.height, MIDNIGHT);
 
         // title
-        colorText('Welcome to', canvasCenter.x, 60, SALMON, 'center', LARGE_FONT);
-        colorText('the', canvasCenter.x - 250, 90, SALMON, 'center', SMALL_FONT);
-        colorText('Cannibal Arcade', canvasCenter.x, 140, SALMON, 'center', LARGE_FONT);
+        drawText('Welcome to', canvasCenter.x, 60, SALMON, 'center', LARGE_FONT);
+        drawText('the', canvasCenter.x - 250, 90, SALMON, 'center', SMALL_FONT);
+        drawText('Cannibal Arcade', canvasCenter.x, 140, SALMON, 'center', LARGE_FONT);
 
         // click to play
-        colorText("Choose your game.", canvasCenter.x, 220, GREY, 'center');
+        drawText("Choose your game.", canvasCenter.x, 220, GREY, 'center');
 
         // buttons
         canvasContext.drawImage(

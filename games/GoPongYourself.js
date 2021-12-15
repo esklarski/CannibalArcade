@@ -96,11 +96,11 @@ class GoPongYourself extends Game {
         this.#drawTitleBackground(this.#fieldColor);
 
         // title
-        colorText(GoPongYourself.#TITLE,
+        drawText(GoPongYourself.#TITLE,
             canvasCenter.x, 180, this.#textColor, 'center', LARGE_FONT);
 
         // click to play
-        colorText("Click to begin play.",
+        drawText("Click to begin play.",
             canvasCenter.x, canvasCenter.y - 45, this.#textColor, 'center');
 
         // button
@@ -110,10 +110,10 @@ class GoPongYourself extends Game {
         drawButton(button5, "practice",
             this.#buttonColor, this.#practice ? this.#textColor : this.#buttonTextColor);
 
-        colorText("Use mouse to position paddles, go for a high score.",
+        drawText("Use mouse to position paddles, go for a high score.",
             canvasCenter.x, canvasCenter.y + 200, this.#textColor, 'center', SMALL_FONT);
 
-        colorText("Press Space bar to pause game.", canvasCenter.x, canvasCenter.y + 225, this.#textColor, 'center', SMALL_FONT);
+        drawText("Press Space bar to pause game.", canvasCenter.x, canvasCenter.y + 225, this.#textColor, 'center', SMALL_FONT);
 
         drawButton(buttonCorner3, "Exit Game", this.#buttonTextColor, this.#buttonColor);
     }
@@ -172,8 +172,8 @@ class GoPongYourself extends Game {
 
     /** @override */
     PauseOverlay() {
-        colorRect(0, 0, canvas.width, canvas.height, 'black', 0.5);
-        colorText("press SPACE to resume",
+        drawRect(0, 0, canvas.width, canvas.height, 'black', 0.5);
+        drawText("press SPACE to resume",
             canvas.width / 2, canvas.height / 4, this.#textColor, 'center');
 
         drawButton(button2, 'Reset', this.#buttonColor, this.#buttonTextColor);
@@ -185,18 +185,18 @@ class GoPongYourself extends Game {
         this.#drawTitleBackground();
 
         // Game Over text
-        colorText("Game Over",
+        drawText("Game Over",
             canvas.width / 2, 180, this.#textColor, 'center', LARGE_FONT);
 
         // button
         drawButton(button2, 'Serve!', this.#buttonColor, this.#buttonTextColor);
 
         // final score
-        colorText("Score: " + this.#volleys + " volleys.",
+        drawText("Score: " + this.#volleys + " volleys.",
             canvas.width / 2, (canvas.height / 2) + 60, this.#textColor, 'center');
 
         // max score text
-        colorText("Most volleys achieved: " + this.#maxVolleys,
+        drawText("Most volleys achieved: " + this.#maxVolleys,
             canvas.width / 2, (canvas.height / 2) + 150, this.#textColor, 'center');
 
         drawButton(buttonCorner3, "Exit to Title",
@@ -323,24 +323,24 @@ class GoPongYourself extends Game {
         this.#drawGameBackground();
 
         // Ball
-        colorCircle(this.#ballX, this.#ballY, this.#BALL_RADIUS, this.#ballColor);
+        drawCircle(this.#ballX, this.#ballY, this.#BALL_RADIUS, this.#ballColor);
 
         // Left Paddle
         this.#paddleLeftY = this.#paddleCheckY(this.#paddleLeftY);
-        colorRect(MARGIN, this.#paddleLeftY, this.#PADDLE_THICKNESS, this.#PADDLE_WIDTH, this.#paddleColor);
+        drawRect(MARGIN, this.#paddleLeftY, this.#PADDLE_THICKNESS, this.#PADDLE_WIDTH, this.#paddleColor);
 
         // Right Paddle
         this.#paddleRightY = this.#paddleCheckY(this.#paddleRightY);
-        colorRect(canvas.width - this.#PADDLE_THICKNESS - MARGIN, this.#paddleRightY, this.#PADDLE_THICKNESS,
+        drawRect(canvas.width - this.#PADDLE_THICKNESS - MARGIN, this.#paddleRightY, this.#PADDLE_THICKNESS,
             this.#PADDLE_WIDTH, this.#paddleColor);
 
         // Top Paddle
         this.#paddleTopX = this.#paddleCheckX(this.#paddleTopX);
-        colorRect(this.#paddleTopX, MARGIN, this.#PADDLE_WIDTH, this.#PADDLE_THICKNESS, this.#paddleColor);
+        drawRect(this.#paddleTopX, MARGIN, this.#PADDLE_WIDTH, this.#PADDLE_THICKNESS, this.#paddleColor);
 
         // Bottom Paddle
         this.#paddleBottomX = this.#paddleCheckX(this.#paddleBottomX);
-        colorRect(this.#paddleBottomX, canvas.height - this.#PADDLE_THICKNESS - MARGIN, this.#PADDLE_WIDTH,
+        drawRect(this.#paddleBottomX, canvas.height - this.#PADDLE_THICKNESS - MARGIN, this.#PADDLE_WIDTH,
             this.#PADDLE_THICKNESS, this.#paddleColor);
 
         this.#drawScore();
@@ -352,7 +352,7 @@ class GoPongYourself extends Game {
      * @param {string} backgroundColor
      */
     #drawTitleBackground() {
-        colorRect(0, 0, canvas.width, canvas.height, this.#fieldColor);
+        drawRect(0, 0, canvas.width, canvas.height, this.#fieldColor);
     }
 
 
@@ -362,8 +362,8 @@ class GoPongYourself extends Game {
      * @param {string} marginColor margin color
      */
     #drawGameBackground() {
-        colorRect(0, 0, canvas.width, canvas.height, this.#lineColor);
-        colorRect(MARGIN, MARGIN, canvas.width - MARGIN * 2, canvas.height - MARGIN * 2, this.#fieldColor);
+        drawRect(0, 0, canvas.width, canvas.height, this.#lineColor);
+        drawRect(MARGIN, MARGIN, canvas.width - MARGIN * 2, canvas.height - MARGIN * 2, this.#fieldColor);
     }
 
 
@@ -371,7 +371,7 @@ class GoPongYourself extends Game {
     /** draw score on screen center */
     #drawScore() {
         if (this.#volleys > 0) {
-            colorText(this.#volleys, canvas.width / 2, canvas.height / 2 + 15, this.#scoreColor, 'center');
+            drawText(this.#volleys, canvas.width / 2, canvas.height / 2 + 15, this.#scoreColor, 'center');
         }
     }
 

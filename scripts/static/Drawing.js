@@ -9,8 +9,8 @@
  * @param {string} txtColor text color
  */
  function drawButton(button, text, btnColor, txtColor) {
-    colorRect(canvasCenter.x + button.x, canvasCenter.y + button.y, button.width, button.height, btnColor);
-    colorText(text, canvasCenter.x + button.txtX, canvasCenter.y + button.txtY, txtColor, 'center');
+    drawRect(canvasCenter.x + button.x, canvasCenter.y + button.y, button.width, button.height, btnColor);
+    drawText(text, canvasCenter.x + button.txtX, canvasCenter.y + button.txtY, txtColor, 'center');
 }
 
 
@@ -23,7 +23,7 @@
  * @param {string} fillColor
  * @param {number} transparency 0 to 1 alpha value, default: 1
  */
-function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, transparency = null) {
+function drawRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, transparency = null) {
     if (transparency != null) { canvasContext.globalAlpha = transparency; }
 
     canvasContext.fillStyle = fillColor;
@@ -40,7 +40,7 @@ function colorRect(topLeftX, topLeftY, boxWidth, boxHeight, fillColor, transpare
  * @param {number} radius
  * @param {string} fillColor
  */
-function colorCircle(centerX, centerY, radius, fillColor) {
+function drawCircle(centerX, centerY, radius, fillColor) {
     canvasContext.fillStyle = fillColor;
     canvasContext.beginPath();
     canvasContext.arc(centerX, centerY, radius, 0, Math.PI * 2, true);
@@ -57,7 +57,7 @@ function colorCircle(centerX, centerY, radius, fillColor) {
  * @param {string} ailignment
  * @param {boolean} [large] large text? Default: false.
  */
-function colorText(text, centerX, centerY, textColor, alignment, font=FONT) {
+function drawText(text, centerX, centerY, textColor, alignment, font=FONT) {
     canvasContext.font = font;
     canvasContext.fillStyle = textColor;
     canvasContext.textAlign = alignment;

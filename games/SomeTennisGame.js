@@ -80,21 +80,21 @@ class SomeTennisGame extends Game {
         this.#drawTitleBackground(this.#fieldColor);
 
         // title
-        colorText(SomeTennisGame.#TITLE,
+        drawText(SomeTennisGame.#TITLE,
             canvasCenter.x, 180, this.#textColor, 'center', LARGE_FONT);
 
         // click to play
-        colorText("Click to begin play.",
+        drawText("Click to begin play.",
             canvasCenter.x, canvasCenter.y - 45, this.#textColor, 'center');
 
         // buttons
         drawButton(button2, 'Begin',
             this.#buttonColor, this.#buttonTextColor);
 
-        colorText("Use mouse to position paddles, score 10 points before your opponent does.",
+        drawText("Use mouse to position paddles, score 10 points before your opponent does.",
             canvasCenter.x, canvasCenter.y + 200, this.#textColor, 'center', SMALL_FONT);
 
-        colorText("Press Space bar to pause game.", canvasCenter.x, canvasCenter.y + 225, this.#textColor, 'center', SMALL_FONT);
+        drawText("Press Space bar to pause game.", canvasCenter.x, canvasCenter.y + 225, this.#textColor, 'center', SMALL_FONT);
 
         drawButton(buttonCorner3, "Exit Game", this.#buttonTextColor, this.#buttonColor);
     }
@@ -145,8 +145,8 @@ class SomeTennisGame extends Game {
 
     /** @override */
     PauseOverlay() {
-        colorRect(0, 0, canvas.width, canvas.height, this.#lineColor, 0.5);
-        colorText("press SPACE to resume",
+        drawRect(0, 0, canvas.width, canvas.height, this.#lineColor, 0.5);
+        drawText("press SPACE to resume",
             canvas.width / 2, canvas.height / 4, this.#textColor, 'center');
 
         drawButton(button2, 'Reset', this.#buttonColor, this.#buttonTextColor);
@@ -157,10 +157,10 @@ class SomeTennisGame extends Game {
         this.#drawTitleBackground();
 
         // Text declaring winner
-        colorText(this.#winner + " wins!", canvas.width / 2, canvas.height / 2 - 20, this.#textColor, 'center');
+        drawText(this.#winner + " wins!", canvas.width / 2, canvas.height / 2 - 20, this.#textColor, 'center');
 
         // final score
-        colorText("Score: " + this.#player1Score + " : " + this.#player2Score, canvas.width / 2, (canvas.height / 2) + 20, this.#textColor, 'center');
+        drawText("Score: " + this.#player1Score + " : " + this.#player2Score, canvas.width / 2, (canvas.height / 2) + 20, this.#textColor, 'center');
 
         // button
         drawButton(button5, "again?", this.#buttonColor, this.#buttonTextColor);
@@ -309,16 +309,16 @@ class SomeTennisGame extends Game {
         this.#drawGameBackground();
 
         // Ball
-        colorCircle(this.#ballX, this.#ballY, this.#BALL_RADIUS, this.#ballColor);
+        drawCircle(this.#ballX, this.#ballY, this.#BALL_RADIUS, this.#ballColor);
 
         // Left Paddle
         this.#paddle1Y = this.#paddleCheck(this.#paddle1Y);
-        colorRect( 5, this.#paddle1Y, this.#PADDLE_THICKNESS, this.#PADDLE_HEIGHT, this.#paddle1Color);
+        drawRect( 5, this.#paddle1Y, this.#PADDLE_THICKNESS, this.#PADDLE_HEIGHT, this.#paddle1Color);
 
         // Right Paddle
         if (this.#AI) { this.#moveComputerPaddle(); }
         this.#paddle2Y = this.#paddleCheck(this.#paddle2Y);
-        colorRect(canvas.width - this.#PADDLE_THICKNESS - MARGIN, this.#paddle2Y, this.#PADDLE_THICKNESS, this.#PADDLE_HEIGHT, this.#paddle2Color);
+        drawRect(canvas.width - this.#PADDLE_THICKNESS - MARGIN, this.#paddle2Y, this.#PADDLE_THICKNESS, this.#PADDLE_HEIGHT, this.#paddle2Color);
 
         this.#drawScore();
     }
@@ -329,7 +329,7 @@ class SomeTennisGame extends Game {
      * @param {string} backgroundColor
      */
      #drawTitleBackground() {
-        colorRect(0, 0, canvas.width, canvas.height, this.#fieldColor);
+        drawRect(0, 0, canvas.width, canvas.height, this.#fieldColor);
     }
 
 
@@ -339,15 +339,15 @@ class SomeTennisGame extends Game {
      * @param {string} marginColor margin color
      */
     #drawGameBackground() {
-        colorRect(0, 0, canvas.width, canvas.height, this.#lineColor);
-        colorRect(MARGIN, MARGIN, canvas.width - MARGIN * 2, canvas.height - MARGIN * 2, this.#fieldColor);
+        drawRect(0, 0, canvas.width, canvas.height, this.#lineColor);
+        drawRect(MARGIN, MARGIN, canvas.width - MARGIN * 2, canvas.height - MARGIN * 2, this.#fieldColor);
     }
 
 
     /** draw scores in screen corners */    
     #drawScore() {
-        colorText(this.#player1Score, MARGIN * 2, canvas.height - MARGIN * 2, this.#textColor, 'start')
-        colorText(this.#player2Score, canvas.width - MARGIN * 2, canvas.height - MARGIN * 2, this.#textColor, 'end');
+        drawText(this.#player1Score, MARGIN * 2, canvas.height - MARGIN * 2, this.#textColor, 'start')
+        drawText(this.#player2Score, canvas.width - MARGIN * 2, canvas.height - MARGIN * 2, this.#textColor, 'end');
     }
 
 

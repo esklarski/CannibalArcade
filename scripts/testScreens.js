@@ -76,13 +76,13 @@ function draw3x2SmButtonScreen() {
     let testButtonOffText = DisneylandParisCastle["LIGHTBLUE"];
 
     // background
-    colorRect(0, 0, canvas.width, canvas.height, testBackground);
+    drawRect(0, 0, canvas.width, canvas.height, testBackground);
 
     // title
-    colorText('3x2sm Button Test Page.', canvasCenter.x, 180, testText, 'center', LARGE_FONT);
+    drawText('3x2sm Button Test Page.', canvasCenter.x, 180, testText, 'center', LARGE_FONT);
 
     // some words
-    colorText("This is a test screen.", canvasCenter.x, canvasCenter.y -45, testText, 'center');
+    drawText("This is a test screen.", canvasCenter.x, canvasCenter.y -45, testText, 'center');
 
     // buttons
     drawButton(button1, 'Button 1', toggle1 ? testButtonOn : testButtonOff, toggle1 ? testButtonOnText : testButtonOffText);
@@ -128,15 +128,15 @@ function draw3x2LgeTestScreen() {
     let BLACK = Luxury['BLACK'];
     let BEIGE = Luxury['BEIGE'];
 
-    colorRect(0, 0, canvas.width, canvas.height, MIDNIGHT);
+    drawRect(0, 0, canvas.width, canvas.height, MIDNIGHT);
 
     // title
-    colorText('Welcome to', canvasCenter.x, 60, SALMON, 'center', LARGE_FONT);
-    colorText('the', canvasCenter.x - 250, 100, SALMON, 'center');
-    colorText('Cannibal Arcade', canvasCenter.x, 160, SALMON, 'center', LARGE_FONT);
+    drawText('Welcome to', canvasCenter.x, 60, SALMON, 'center', LARGE_FONT);
+    drawText('the', canvasCenter.x - 250, 100, SALMON, 'center');
+    drawText('Cannibal Arcade', canvasCenter.x, 160, SALMON, 'center', LARGE_FONT);
 
     // click to play
-    colorText("Choose your game.", canvasCenter.x, 220, GREY, 'center');
+    drawText("Choose your game.", canvasCenter.x, 220, GREY, 'center');
 
     // buttons
     if (toggle1) {
@@ -192,15 +192,15 @@ function draw2x2LgeTest() {
     let BLACK = Luxury['BLACK'];
     let BEIGE = Luxury['BEIGE'];
 
-    colorRect(0, 0, canvas.width, canvas.height, MIDNIGHT);
+    drawRect(0, 0, canvas.width, canvas.height, MIDNIGHT);
 
     // title
-    colorText('Welcome to', canvasCenter.x, 60, SALMON, 'center', LARGE_FONT);
-    colorText('the', canvasCenter.x - 250, 100, SALMON, 'center');
-    colorText('Cannibal Arcade', canvasCenter.x, 160, SALMON, 'center', LARGE_FONT);
+    drawText('Welcome to', canvasCenter.x, 60, SALMON, 'center', LARGE_FONT);
+    drawText('the', canvasCenter.x - 250, 100, SALMON, 'center');
+    drawText('Cannibal Arcade', canvasCenter.x, 160, SALMON, 'center', LARGE_FONT);
 
     // click to play
-    colorText("Choose your game.", canvasCenter.x, 220, GREY, 'center');
+    drawText("Choose your game.", canvasCenter.x, 220, GREY, 'center');
 
     // buttons
     if (toggle1) {
@@ -254,13 +254,13 @@ function drawCornerTest() {
     let testButtonOffText = DisneylandParisCastle["LIGHTBLUE"];
 
     // background
-    colorRect(0, 0, canvas.width, canvas.height, testBackground);
+    drawRect(0, 0, canvas.width, canvas.height, testBackground);
 
     // title
-    colorText('Corner Buttons Test Page.', canvasCenter.x, 180, testText, 'center', LARGE_FONT);
+    drawText('Corner Buttons Test Page.', canvasCenter.x, 180, testText, 'center', LARGE_FONT);
 
     // some words
-    colorText("This is a test screen.", canvasCenter.x, canvasCenter.y -45, testText, 'center');
+    drawText("This is a test screen.", canvasCenter.x, canvasCenter.y -45, testText, 'center');
 
     // buttons
     drawButton(buttonCorner1, 'Button 1', toggle1 ? testButtonOn : testButtonOff, toggle1 ? testButtonOnText : testButtonOffText);

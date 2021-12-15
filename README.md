@@ -21,3 +21,5 @@ Enjoy.
    - Simple 4-way paddle game, solo play, go for a personal high score.
 2. Some Tennis Game
    - Play a more traditional 'Tennis' game vs a mediocre AI
+3. Break Brick
+   - Break bricks...

@@ -222,8 +222,8 @@ class GameManager {
     #selectGame(evt) {
         var mousePos = calculateMousePosition(evt);
 
-        if (isInButton(mousePos, buttonLge7)) { gameManager.LoadGame(GAMES.GoPongYourself); return; }
-        if (isInButton(mousePos, buttonLge8)) { gameManager.LoadGame(GAMES.SomeTennisGame); return; }
+        if (isInButton(mousePos, buttonLge7)) { gameManager.LoadGame( new GoPongYourself() ); return; }
+        if (isInButton(mousePos, buttonLge8)) { gameManager.LoadGame( new SomeTennisGame() ); return; }
         if (isInButton(mousePos, buttonLge9)) { toggle3 = toggleState(toggle3); }
         if (isInButton(mousePos, buttonLge10)) { toggle4 = toggleState(toggle4); }
 

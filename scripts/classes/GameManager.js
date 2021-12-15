@@ -122,8 +122,10 @@ class GameManager {
 
 
     // ********************************** MAIN LOOP *************************************
+    #timeDelta;
+    #lastTimeStamp;
     /** main logic loop */
-    #execute() {
+    #execute(timeStamp) {
         switch (this.#gameState) {
             case
                 GameState.Menu: {
@@ -142,7 +144,11 @@ class GameManager {
             case
                 GameState.Playing: {
                     if (this.#gameLoop != null) {
-                        this.#game.Loop();
+                        // track frame time
+                        this.#timeDelta = (timeStamp - this.#lastTimeStamp) / 1000;
+                        this.#lastTimeStamp = timeStamp;
+
+                        this.#game.Loop(this.#timeDelta);
                         window.requestAnimationFrame(this.#gameLoop);
                     }
                     else {
@@ -180,6 +186,7 @@ class GameManager {
     /** start render cycle */
     #startGame() {
         this.#gameLoop = this.#execute.bind(this);
+        this.#lastTimeStamp = performance.now();
         window.requestAnimationFrame(this.#gameLoop);
     }
 

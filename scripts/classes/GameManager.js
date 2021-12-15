@@ -9,13 +9,11 @@
  * @method Title()
  */
 class GameManager {
-    /** @type {number} Target fps. */
-    static TARGET_FPS = 59; // for some reason 59 seems smoother than 60
-
-    /** @type {number} frame time in ms */
-    #frameInterval;
-
-    /** @type {number} store interval id */
+    /**
+     * Bound copy of this.#execute().
+     * 
+     * @type {Function}
+     */
     #gameLoop;
 
     /** @type {string} current game state */
@@ -31,7 +29,6 @@ class GameManager {
      * {@link GameManager}
      */
     constructor() {
-        this.#frameInterval = Math.ceil(1000 / GameManager.TARGET_FPS);
         this.#gameLoop = null;
         this.#gameState = GameState.Title;
         this.#game = null;
@@ -80,12 +77,6 @@ class GameManager {
     /** @returns {string} current game state */
     get State() {
         return this.#gameState;
-    }
-
-
-    /** @returns {number} frame interval in ms */
-    get Interval() {
-        return this.#frameInterval;
     }
 
 
@@ -150,14 +141,15 @@ class GameManager {
                 break;
             case
                 GameState.Playing: {
-                    if (this.#gameLoop == null) {
+                    if (this.#gameLoop != null) {
+                        this.#game.Loop();
+                        window.requestAnimationFrame(this.#gameLoop);
+                    }
+                    else {
                         this.#game.GameEvents(true);
                         this.#game.UiEvents(false);
 
                         this.#startGame();
-                    }
-                    else {
-                        this.#game.Loop();
                     }
                 }
                 break;
@@ -187,17 +179,13 @@ class GameManager {
     // ***************************** GAME LOOP CONTROL **********************************
     /** start render cycle */
     #startGame() {
-        let loop = this.#execute.bind(this);
-        this.#gameLoop = setInterval(
-            loop,
-            this.#frameInterval
-        );
+        this.#gameLoop = this.#execute.bind(this);
+        window.requestAnimationFrame(this.#gameLoop);
     }
 
 
     /** stop rendering */
     #stopGame() {
-        clearInterval(this.#gameLoop);
         this.#gameLoop = null;
     }
     

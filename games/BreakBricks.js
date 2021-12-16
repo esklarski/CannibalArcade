@@ -1,5 +1,5 @@
 "use strict";
-// ******************************* Break Bricks v0.1 ********************************
+// ********************************* Break Bricks v0.1 **********************************
 /**
  * @author Evan Sklarski <esklarski@gmail.com>
  * @version 0.1
@@ -125,7 +125,7 @@ class BreakBricks extends Game {
 
 
 
-    // ******************************* REQUIRED OVERRIDES *******************************
+// ********************************* REQUIRED OVERRIDES *********************************
     /** @override */
     TitleScreen() {
         drawRect(0, 0, canvas.width, canvas.height, this.#fieldColor);
@@ -146,7 +146,8 @@ class BreakBricks extends Game {
         // drawText("Use mouse to position paddles, score 10 points before your opponent does.",
         //     canvasCenter.x, canvasCenter.y + 200, this.#textColor, 'center', SMALL_FONT);
 
-        drawText("Press Space bar to pause game.", canvasCenter.x, canvasCenter.y + 225, this.#textColor, 'center', SMALL_FONT);
+        drawText("Press Space bar to pause game.",
+            canvasCenter.x, canvasCenter.y + 225, this.#textColor, 'center', SMALL_FONT);
 
         drawButton(buttonCorner3, "Exit Game", this.#fieldColor, this.#buttonColor);
     }
@@ -168,11 +169,20 @@ class BreakBricks extends Game {
 
         drawText(
             this.#bricksBroken + " bricks broken ",
-            canvasCenter.x, canvasCenter.y - 10, this.#textColor, 'center');
+            canvasCenter.x,
+            canvasCenter.y - 10,
+            this.#textColor,
+            'center'
+        );
         drawText(
-            (this.#volleys > 0) ? Math.round(this.#bricksBroken / this.#volleys)
-                + " bricks/volley." : "zero volleys.",
-            canvasCenter.x, canvasCenter.y + 20, this.#textColor, 'center', SMALL_FONT);
+            (this.#volleys > 0) ?
+                Math.round(this.#bricksBroken / this.#volleys) + " bricks/volley."
+                : "zero volleys.",
+            canvasCenter.x, canvasCenter.y + 20,
+            this.#textColor,
+            'center',
+            SMALL_FONT
+        );
 
         drawButton(button5, "again?", this.#buttonColor, this.#buttonTextColor);
         drawButton(buttonCorner3, "Exit to Title", this.#fieldColor, this.#buttonColor);
@@ -245,14 +255,12 @@ class BreakBricks extends Game {
         // balls left
         this.#ballsLeft = this.#LIVES;
 
-        // fill pattern
-        this.#fillBrickGrid( this.#Fill_Patterns['RANDOM'] );
-
-        // ball
-        this.#resetBall();
+        this.#resetPlay();
     }
 
 
+
+// *********************** RESET AND INITIALIZATION FUNCTIONS ***************************
     #initializeGame() {
         // padding to fit bricks to canvas
         this.#xPadding = ( canvas.width - ( this.#BRICK_WIDTH * this.#BRICK_COLS ) ) / 2;
@@ -270,6 +278,15 @@ class BreakBricks extends Game {
     }
 
 
+    #resetPlay() {
+        // fill pattern
+        this.#fillBrickGrid( this.#Fill_Patterns['RANDOM'] );
+
+        // ball
+        this.#resetBall();
+    }
+
+
     /** Reset ball position and speed. */
     #resetBall() {
         this.#ballX = this.#paddleX + this.#PADDLE_WIDTH / 2;
@@ -281,7 +298,7 @@ class BreakBricks extends Game {
 
 
 
-    // *********************************** GAME LOOP ****************************************
+// *********************************** GAME LOOP ****************************************
     /** {@link moveEverything} ball hit offset from paddle center */
     #deltaX = 0.0;
     /** {@link moveEverything} paddle rebound timeout */
@@ -333,16 +350,18 @@ class BreakBricks extends Game {
         }
         // else paddle bounce check
         else if (
-            this.#ballY > this.#paddleY - MARGIN &&                          // top edge
-            this.#ballY < this.#paddleY + this.#PADDLE_THICKNESS + MARGIN && // bottom edge
-            this.#ballX > this.#paddleX - MARGIN &&                          // left edge
-            this.#ballX < this.#paddleX + this.#PADDLE_WIDTH + MARGIN        // right edge
+            this.#ballY > this.#paddleY - MARGIN &&                          // top
+            this.#ballY < this.#paddleY + this.#PADDLE_THICKNESS + MARGIN && // bottom
+            this.#ballX > this.#paddleX - MARGIN &&                          // left
+            this.#ballX < this.#paddleX + this.#PADDLE_WIDTH + MARGIN        // right
         ) {
             this.#ballSpeedY *= -1;
     
             // calculate paddle rebound
             this.#deltaX = this.#ballX - (this.#paddleX + this.#PADDLE_WIDTH / 2);
-            this.#ballSpeedX += (this.#deltaX / (this.#PADDLE_WIDTH / 2)) * (this.#BALL_SPEED * this.#PADDLE_CURVE);
+            this.#ballSpeedX +=
+                (this.#deltaX / (this.#PADDLE_WIDTH / 2))
+                * (this.#BALL_SPEED * this.#PADDLE_CURVE);
     
             // set timer
             this.#hitTimer = 2;
@@ -351,11 +370,10 @@ class BreakBricks extends Game {
     
         // if in brick grid bounds
         if (
-            this.#ballX > this.#xPadding &&                            // left bound
-            this.#ballX < canvas.width - this.#xPadding &&             // right bound
-            this.#ballY > this.#yPadding &&                            // top bound
-            this.#ballY <
-            this.#BRICK_HEIGHT * this.#BRICK_ROWS + this.#yPadding // bottom bound
+            this.#ballX > this.#xPadding &&                                      // left
+            this.#ballX < canvas.width - this.#xPadding &&                       // right
+            this.#ballY > this.#yPadding &&                                      // top
+            this.#ballY < this.#BRICK_HEIGHT * this.#BRICK_ROWS + this.#yPadding // bottom
         ) {
             // brick check
             this.#brickHitTest();
@@ -378,7 +396,9 @@ class BreakBricks extends Game {
      * @param {number} speed speed to check
      * @returns {number} clamped speed value
      */
-    #speedCheckX = (speed) => {return (speed > this.#BALL_MAX_SPEED) ? this.#BALL_MAX_SPEED : speed;}
+    #speedCheckX = (speed) => {
+        return (speed > this.#BALL_MAX_SPEED) ? this.#BALL_MAX_SPEED : speed;
+    }
     
     
     /** Draw frame. */
@@ -387,12 +407,24 @@ class BreakBricks extends Game {
         drawRect(0, 0, canvas.width, canvas.height, this.#fieldColor);
     
         // bricks
-        if (this.#drawVisibleBricks(this.#brickColor) == 0) { this.Reset(); }
+        if (this.#drawVisibleBricks(this.#brickColor) == 0) { this.#resetPlay(); }
     
         // paddle and center mark
-        drawRect(this.#paddleX, this.#paddleY, this.#PADDLE_WIDTH, this.#PADDLE_THICKNESS, this.#paddleColor);
+        drawRect(
+            this.#paddleX,
+            this.#paddleY,
+            this.#PADDLE_WIDTH,
+            this.#PADDLE_THICKNESS,
+            this.#paddleColor
+        );
+
         if (this.#practice) {
-            drawRect(this.#paddleX + this.#PADDLE_WIDTH / 2 - 2, this.#paddleY, 4, this.#PADDLE_THICKNESS, this.#paddleCenter);
+            drawRect(
+                this.#paddleX + this.#PADDLE_WIDTH / 2 - 1,
+                this.#paddleY,
+                2,
+                this.#PADDLE_THICKNESS,
+                this.#paddleCenter);
         }
     
         // ball
@@ -403,7 +435,12 @@ class BreakBricks extends Game {
 
     #drawLivesRemaining() {
         for (this.#i = this.#ballsLeft; this.#i > 0; this.#i--) {
-            drawCircle(this.#i * this.#BALL_RADIUS * 3, canvas.height - this.#BALL_RADIUS * 2, this.#BALL_RADIUS, this.#ballColor);
+            drawCircle(
+                this.#i * this.#BALL_RADIUS * 3,
+                canvas.height - this.#BALL_RADIUS * 2,
+                this.#BALL_RADIUS,
+                this.#ballColor
+            );
         }
     }
     
@@ -458,8 +495,7 @@ class BreakBricks extends Game {
     
                 // rebound as top/bottom hit
                 if (
-                    this.#testAdjacencyX(
-                        this.#testColumn, this.#testRow, this.#prevColumn)
+                    this.#testAdjacencyX(this.#testColumn, this.#testRow, this.#prevColumn)
                 ) {
                     this.#ballSpeedY *= -1;
                     this.#adjacentHit = true;
@@ -467,7 +503,9 @@ class BreakBricks extends Game {
                 }
     
                 // rebound as left/right side hit
-                if (this.#testAdjacencyY(this.#testColumn, this.#testRow, this.#prevRow)) {
+                if (
+                    this.#testAdjacencyY(this.#testColumn, this.#testRow, this.#prevRow)
+                ) {
                     this.#ballSpeedX *= -1;
                     this.#adjacentHit = true;
                     this.#damageBrick(this.#testColumn, this.#offsetRow);
@@ -518,7 +556,7 @@ class BreakBricks extends Game {
 
 
 
-    // ********************************* INUPT FUNCTIONS ************************************
+// ********************************* INUPT FUNCTIONS ************************************
     /**
      * Stores mouse cursor X coordinate.
      * @param {Event} evt - mouse event
@@ -559,7 +597,8 @@ class BreakBricks extends Game {
      */
     #paddleCheck = (xCoordinate) => {
         return (xCoordinate < 0) ? 0
-            : (xCoordinate > canvas.width - this.#PADDLE_WIDTH) ? canvas.width - this.#PADDLE_WIDTH
+            : (xCoordinate > canvas.width - this.#PADDLE_WIDTH) ?
+                canvas.width - this.#PADDLE_WIDTH
                 : xCoordinate;
     }
 
@@ -617,7 +656,7 @@ class BreakBricks extends Game {
 
 
 
-    // ****************************** BRICK DRAW FUNCTIONS **********************************
+// ****************************** BRICK DRAW FUNCTIONS **********************************
     // drawVisibleBricks variables
     /** Brick index. Used by {@link drawVisibleBricks} */
     #brick = 0;
@@ -731,7 +770,9 @@ class BreakBricks extends Game {
     /** brickGrid diagonal motion test pattern */
     #testPatternBrickGrid() {
         for (this.#i = 0; this.#i < this.#BRICK_COLS * this.#BRICK_ROWS; this.#i++) {
-            if (this.#i % this.#BRICK_COLS == 0) { this.#drawBrickNow = this.#toggleBool(this.#drawBrickNow); }
+            if (this.#i % this.#BRICK_COLS == 0) {
+                this.#drawBrickNow = this.#toggleBool(this.#drawBrickNow);
+            }
 
             this.#drawBrickNow = this.#toggleBool(this.#drawBrickNow);
 
@@ -751,7 +792,7 @@ class BreakBricks extends Game {
 
 
 
-    // ********************************** BRICK FUNCTIONS ***********************************
+// ********************************** BRICK FUNCTIONS ***********************************
     /**
      * Reduce HP of brick at index [x, y].
      * 
@@ -826,7 +867,9 @@ class BreakBricks extends Game {
      * @param {number} index brick index
      * @returns {number} brick row
      */
-    #brickIndexToRow = (index) => { return (index - (index % this.#BRICK_COLS)) / this.#BRICK_COLS; }
+    #brickIndexToRow = (index) => {
+        return (index - (index % this.#BRICK_COLS)) / this.#BRICK_COLS;
+    }
 
 
     /**
@@ -845,7 +888,7 @@ class BreakBricks extends Game {
 
 
 
-    // ****************************** BRICK ADJACENCY TESTING *******************************
+// ****************************** BRICK ADJACENCY TESTING *******************************
 
     /**
      * Offset column for adjacency testing.

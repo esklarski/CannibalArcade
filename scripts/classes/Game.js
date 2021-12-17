@@ -13,28 +13,32 @@ class Game {
     /** Game Title */
     #gameTitle;
 
+
+    /**
+     * {@link Game}
+     * @param {string} title game title
+     */
+    constructor(title) {
+        this.#gameTitle = title;
+    }
+
+
+    /** Game title. */
+    get Title() {
+        return this.#gameTitle;
+    }
+
+    toString() {
+        return this.#gameTitle;
+    }
+
+
+    // ************************ GAME SCREENS ************************
     // virtual methods - must be overridden
     /**
      * {@link TitleScreen} - draw title screen
      */
     TitleScreen() { return null; }
-    
-    /**
-     * {@link UiEvents} - toggle ui events on/off
-     * @param {boolean} on
-     */
-    UiEvents(on) { return null; }
-    
-    /**
-     * {@link Loop} - main game logic loop
-     */
-    Loop() { return null; }
-
-    /**
-     * {@link GameEvents} - toggle game events on/off
-     * @param {boolean} on
-     */
-    GameEvents(on) { return null; }
 
     /**
      * {@link PauseOverlay} - draw pause overlay
@@ -46,27 +50,39 @@ class Game {
      */
     GameOverScreen() { return null; }
 
+
+    // *************************** EVENTS ***************************
+    // virtual methods - must be overridden
+    /**
+     * {@link UiEvents} - toggle ui events on/off
+     * @param {boolean} on
+     */
+    UiEvents(on) { return null; }
+
+    /**
+     * {@link GameEvents} - toggle game events on/off
+     * @param {boolean} on
+     */
+    GameEvents(on) { return null; }
+
+
+    // ************************* GAME LOOP **************************
+    // virtual methods - must be overridden
+    /**
+     * {@link Loop} - main game logic loop
+     */
+    Loop() { return null; }
+
     /**
      * {@link Reset} - reset game parameters
      */
     Reset() { return null; }
 
-    /**
-     * {@link Game}
-     * @param {string} title game title
-     */
-    constructor(title) {
-        this.#gameTitle = title;
-    }
 
+    // *************************** RESIZE ***************************
+    // virtual methods - must be overridden
     /**
-     * get game title
+     * {@link Resize} - recalculate canvas based properties
      */
-    get Title() {
-        return this.#gameTitle;
-    }
-
-    toString() {
-        return this.#gameTitle;
-    }
+    Resize() { return null; }
 }

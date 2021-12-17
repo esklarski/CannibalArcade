@@ -9,6 +9,8 @@
 // Games:
 //   - Go Pong Yourself
 //   - Some Tennis Game
+//
+// TODO move basic events (mouse) into index.js as opposed to in each game.
 // **************************************************************************************
 
 /** debug mode? */

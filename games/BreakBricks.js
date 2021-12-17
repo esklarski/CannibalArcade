@@ -12,7 +12,9 @@
  * inspired by: Hands-On Intro to Game Programming (v5), Chris DeLeon
  */
 // TODO:
-// - ??
+// - brick fill settings [RANDOM, FULL]
+// - practice mode toggle
+// - timed mode?
 //
 // **************************************************************************************
 
@@ -121,6 +123,9 @@ class BreakBricks extends Game {
 
     constructor() {
         super(BreakBricks.#TITLE);
+
+        // create array
+        this.#brickGrid = new Array(this.#BRICK_COLS * this.#BRICK_ROWS);
     }
 
 
@@ -154,6 +159,9 @@ class BreakBricks extends Game {
 
     /** @override */
     PauseOverlay() {
+        // this keeps game visible under overlay, while resizing window
+        this.#drawFrame();
+
         drawRect(0, 0, canvas.width, canvas.height, 'black', 0.7);
         drawText("press SPACE to resume",
             canvasCenter.x, canvas.height / 4, this.#buttonTextColor, 'center');
@@ -249,7 +257,10 @@ class BreakBricks extends Game {
     /** @override */
     Reset() {
         if (this.#firstReset) {
-            this.#initializeGame();
+            this.#initializeCanvasProperties();
+
+            // initial setup complete
+            this.#firstReset = false;
         }
 
         // balls left
@@ -258,23 +269,40 @@ class BreakBricks extends Game {
         this.#resetPlay();
     }
 
+    /** Store ball coordinates for resize recalculation. */
+    #storedBallCoords = [0, 0];
+    /** @override */
+    Resize(previousCanvas) {
+        // store current ball position accounting for current padding
+        this.#storedBallCoords[0] = this.#ballX - this.#xPadding;
+        this.#storedBallCoords[1] = this.#ballY - this.#yPadding;
+
+        // setup canvas based properties
+        this.#initializeCanvasProperties();
+
+        // recalc ball position with new paddings
+        this.#ballX = this.#storedBallCoords[0] + this.#xPadding;
+        this.#ballY = this.#storedBallCoords[1] + this.#yPadding;
+
+        // move paddle relative to new screen size
+        this.#paddleX = this.#paddleCheck(
+            this.#paddleX / previousCanvas[0] * canvas.width
+        );
+    }
+
 
 
 // *********************** RESET AND INITIALIZATION FUNCTIONS ***************************
-    #initializeGame() {
+    #initializeCanvasProperties() {
         // padding to fit bricks to canvas
         this.#xPadding = ( canvas.width - ( this.#BRICK_WIDTH * this.#BRICK_COLS ) ) / 2;
         this.#yPadding = this.#BRICK_HEIGHT * 2;
 
         // initialize paddles
-        this.#paddleX = canvas.width / 2 - this.#PADDLE_WIDTH / 2;
+        if (this.#firstReset) {
+            this.#paddleX = canvasCenter.x - this.#PADDLE_WIDTH / 2;
+        }
         this.#paddleY = canvas.height - canvas.height / 10;
-
-        // create array
-        this.#brickGrid = new Array(this.#BRICK_COLS * this.#BRICK_ROWS);
-
-        // initial setup complete
-        this.#firstReset = false;
     }
 
 

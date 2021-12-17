@@ -19,7 +19,6 @@
         "scripts/static/Buttons.js",
         "games/GoPongYourself.js",
         "games/SomeTennisGame.js",
-        "games/BreakBricks.js",
-        "scripts/static/GamesLibrary.js"
+        "games/BreakBricks.js"
     ]
 }

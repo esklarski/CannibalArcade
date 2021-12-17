@@ -115,7 +115,7 @@ function sizeCanvas() {
 
 window.onresize = function () {
     // store previous canvas dimensions
-    let previousCanvas = [canvas.width, canvas.height];
+    let previousCanvas = { width: canvas.width, height: canvas.height };
 
     // reset things here
     sizeCanvas();

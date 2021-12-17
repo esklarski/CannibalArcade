@@ -286,7 +286,7 @@ class BreakBricks extends Game {
 
         // move paddle relative to new screen size
         this.#paddleX = this.#paddleCheck(
-            this.#paddleX / previousCanvas[0] * canvas.width
+            this.#paddleX / previousCanvas.width * canvas.width
         );
     }
 

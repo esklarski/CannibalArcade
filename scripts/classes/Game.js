@@ -83,6 +83,8 @@ class Game {
     // virtual methods - must be overridden
     /**
      * {@link Resize} - recalculate canvas based properties
+     * 
+     * @param {number[]} previousCanvas [canvas.width, canvas.height]
      */
-    Resize() { return null; }
+    Resize(previousCanvas) { return null; }
 }

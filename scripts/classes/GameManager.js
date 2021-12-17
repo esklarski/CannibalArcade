@@ -87,7 +87,11 @@ class GameManager {
     }
 
 
-    /** Trigger when canvas resized. */
+    /** 
+     * Trigger when canvas resized.
+     * 
+     * @param {Object} previousCanvas {width: x, height: y}
+     */
     ResizeGame(previousCanvas) {
         // if game is loaded
         if (this.#game != null) {
@@ -174,10 +178,14 @@ class GameManager {
 
     // ********************************** MAIN LOOP *************************************
     /** Time passed since last frame. */
-    #timeDelta;
-    /** Previous timeStamp */
-    #lastTimeStamp;
-    /** main logic loop */
+    #timeDelta = 0;
+    /** Previous timeStamp. */
+    #lastTimeStamp = 0;
+    /**
+     * Main logic loop.
+     * 
+     * @param {number} timeStamp current time stamp
+     */
     #execute(timeStamp) {
         if (this.#gameState == GameState.Playing) {
             // track frame time
@@ -233,6 +241,7 @@ class GameManager {
 
 
     // ***************************** GAME MENU SCREEN ***********************************
+    /** @type {Function} */
     #menuEvent = null;
     /** toggle game menu events */
     #gameMenuEvents(on) {
@@ -254,7 +263,7 @@ class GameManager {
      * @param {Event} evt
      */
     #selectGame(evt) {
-        var mousePos = calculateMousePosition(evt);
+        let mousePos = calculateMousePosition(evt);
 
         if (isInButton(mousePos, buttonLge7)) { gameManager.LoadGame( new GoPongYourself() ); return; }
         if (isInButton(mousePos, buttonLge8)) { gameManager.LoadGame( new SomeTennisGame() ); return; }

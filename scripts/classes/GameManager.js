@@ -35,9 +35,15 @@ class GameManager {
     }
 
 
+    /** @returns {GameState} current game state */
+    get State() {
+        return this.#gameState;
+    }
+
+
 
     // ******************************** BASIC METHODS ***********************************
-    /** start arcade: draw game select screen */
+    /** Start arcade; draw game select screen. */
     Start() {
         this.#setState(GameState.Menu);
     }
@@ -48,7 +54,7 @@ class GameManager {
      * @param {Game} game
      */
     LoadGame(game) {
-        // turn off evenets
+        // turn off events
         this.#gameMenuEvents(false);
 
         this.#game = game;
@@ -61,9 +67,9 @@ class GameManager {
     }
 
 
-    /** unload current game and return to game select */
+    /** Unload current game and return to game select. */
     ExitGame() {
-        // turn off evenets
+        // turn off all events
         this.#game.UiEvents(false);
 
         // null current game
@@ -74,9 +80,21 @@ class GameManager {
     }
 
 
-    /** @returns {string} current game state */
-    get State() {
-        return this.#gameState;
+    /** Trigger when canvas resized. */
+    ResizeGame(previousCanvas) {
+        // if game is loaded
+        if (this.#game != null) {
+            // if playing, pause game
+            if (this.#gameState == GameState.Playing) {
+                this.#setState(GameState.Paused);
+            }
+
+            // trigger game resize
+            this.#game.Resize(previousCanvas);
+        }
+
+        // redraw ui
+        this.#drawUI();
     }
 
 
@@ -112,71 +130,59 @@ class GameManager {
      * @param {string} newState
      */
     #setState(newState) {
-        this.#gameState = newState;
+        if (GameState.hasOwnProperty(newState)) {
+            this.#gameState = newState;
 
-        if (this.#gameState == GameState.Title || this.#gameState == GameState.Playing || this.#gameState == GameState.Menu) {
-            this.#execute();
+            switch (this.#gameState) {
+                case
+                    GameState.Playing: {
+                        this.#game.GameEvents(true);
+                        this.#game.UiEvents(false);
+    
+                        this.#startGame();
+                    }
+                    break;
+                case
+                    GameState.Menu: {
+                        this.#gameMenuEvents(true);
+                    }
+                    break;
+                case
+                    GameState.Title:
+                case
+                    GameState.Paused:
+                case
+                    GameState.GameOver: {
+                        this.#game.GameEvents(false);
+                        this.#game.UiEvents(true);
+                    }
+                    break;
+            }
         }
+    
+        this.#drawUI();
     }
 
 
 
     // ********************************** MAIN LOOP *************************************
+    /** Time passed since last frame. */
     #timeDelta;
+    /** Previous timeStamp */
     #lastTimeStamp;
     /** main logic loop */
     #execute(timeStamp) {
-        switch (this.#gameState) {
-            case
-                GameState.Menu: {
-                    this.#gameMenuEvents(true);
-                    this.#drawGameMenu();
-                }
-                break;
-            case
-                GameState.Title: {
-                    this.#game.GameEvents(false);
-                    this.#game.UiEvents(true);
+        if (this.#gameState == GameState.Playing) {
+            // track frame time
+            this.#timeDelta = (timeStamp - this.#lastTimeStamp) / 1000;
+            this.#lastTimeStamp = timeStamp;
 
-                    this.#game.TitleScreen();
-                }
-                break;
-            case
-                GameState.Playing: {
-                    if (this.#gameLoop != null) {
-                        // track frame time
-                        this.#timeDelta = (timeStamp - this.#lastTimeStamp) / 1000;
-                        this.#lastTimeStamp = timeStamp;
-
-                        this.#game.Loop(this.#timeDelta);
-                        window.requestAnimationFrame(this.#gameLoop);
-                    }
-                    else {
-                        this.#game.GameEvents(true);
-                        this.#game.UiEvents(false);
-
-                        this.#startGame();
-                    }
-                }
-                break;
-            case
-                GameState.Paused: {
-                    this.#game.GameEvents(false);
-                    this.#game.UiEvents(true);
-
-                    this.#game.PauseOverlay();
-                    this.#stopGame();
-                }
-                break;
-            case
-                GameState.GameOver: {
-                    this.#game.GameEvents(false);
-                    this.#game.UiEvents(true);
-
-                    this.#game.GameOverScreen();
-                    this.#stopGame();
-                }
-                break;
+            this.#game.Loop(this.#timeDelta);
+            window.requestAnimationFrame(this.#gameLoop);
+        }
+        else {
+            this.#stopGame();
+            this.#drawUI();
         }
     }
 
@@ -194,6 +200,27 @@ class GameManager {
     /** stop rendering */
     #stopGame() {
         this.#gameLoop = null;
+    }
+
+
+
+    // ************************************* drawUI *************************************
+    /** Draw UI screens. */
+    #drawUI() {
+        switch (this.#gameState) {
+            case
+                GameState.Menu: { this.#drawGameMenu(); }
+                break;
+            case
+                GameState.Title: { this.#game.TitleScreen(); }
+                break;
+            case
+                GameState.Paused: { this.#game.PauseOverlay(); }
+                break;
+            case
+                GameState.GameOver: { this.#game.GameOverScreen(); }
+                break;
+        }
     }
     
 

@@ -89,20 +89,37 @@ window.onload = function () {
 function initialize() {
     canvas = document.getElementById("gameCanvas");
     canvasContext = canvas.getContext("2d");
-    canvasCenter = {
-        x: canvas.width / 2,
-        y: canvas.height / 2,
-    };
-    rect = canvas.getBoundingClientRect();
-    root = document.documentElement;
+
+    sizeCanvas();
 
     gameManager = new GameManager();
 }
 
-// window.onresize = function () {
-//     // TODO
-//     // size canvas to screen and accomadate resizing
-// }
+function sizeCanvas() {
+    let framePadding = (window.innerWidth > window.innerHeight)
+        ? window.innerHeight / 10
+        : window.innerWidth / 10;
+
+    canvas.width = window.innerWidth - framePadding;
+    canvas.height = window.innerHeight - framePadding;
+    canvasCenter = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+    };
+
+    rect = canvas.getBoundingClientRect();
+    root = document.documentElement;
+}
+
+window.onresize = function () {
+    // store previous canvas dimensions
+    let previousCanvas = [canvas.width, canvas.height];
+
+    // reset things here
+    sizeCanvas();
+
+    gameManager.ResizeGame(previousCanvas);
+}
 
 
 

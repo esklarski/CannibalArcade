@@ -4,9 +4,16 @@
  * @class  Game manager for arcade system, simple but working.
  * @requires Game
  * @requires GameState
- * @property {string} State - current game state
- * @property {number} Interval - frame interval in ms
- * @method Title()
+ * @property {string} {@link State} - current game state
+ * @method {@link Start()} - start game manager
+ * @method {@link LoadGame()} - load a new game
+ * @method {@link ExitGame()} - exit to game select
+ * @method {@link ResizeGame()} - triggered on canvas resize
+ * @method {@link Title()} - set Title state
+ * @method {@link Play()} - set Playing state
+ * @method {@link Pause()} - set Paused state
+ * @method {@link GameOver()} - set GameOver state
+ * @method {@link ResetGame()} - trigger game reset
  */
 class GameManager {
     /**
@@ -35,7 +42,7 @@ class GameManager {
     }
 
 
-    /** @returns {GameState} current game state */
+    /** @returns {string} current game state */
     get State() {
         return this.#gameState;
     }

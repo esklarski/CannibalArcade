@@ -1,13 +1,13 @@
 "use strict";
 /**
  * Base definition for {@link Game}. Requires extension.
- * @method {@link TitleScreen}
- * @method {@link UiEvents}
- * @method {@link Loop}
- * @method {@link GameEvents}
- * @method {@link PauseOverlay}
- * @method {@link GameOverScreen}
- * @method {@link Reset}
+ * @method {@link TitleScreen()}
+ * @method {@link UiEvents()}
+ * @method {@link Loop()}
+ * @method {@link GameEvents()}
+ * @method {@link PauseOverlay()}
+ * @method {@link GameOverScreen()}
+ * @method {@link Reset()}
 */
 class Game {
     /** Game Title */

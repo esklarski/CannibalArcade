@@ -1,23 +1,24 @@
 "use strict";
 // ********************************* BUTTON FUNCTIONS ***********************************
 
+let buttonClicked = false;
 /**
  * Test if coordinates are within {@link Button} bounds.
  * @param {Coordinate} mousePos {@link Coordinate}
  * @param {Button} button {@link Button}
  */
  function isInButton(mousePos, button) {
-    let clicked = false;
+    buttonClicked = false;
 
     if ( mousePos.x > canvasCenter.x +  button.x                    // button left
       && mousePos.x < canvasCenter.x + (button.x + button.width)    // button right
       && mousePos.y > canvasCenter.y +  button.y                    // button top
       && mousePos.y < canvasCenter.y + (button.y + button.height))  // button bottom
     {
-        clicked = true;
+        buttonClicked = true;
     }
  
-    return clicked;
+    return buttonClicked;
 }
 
 /**

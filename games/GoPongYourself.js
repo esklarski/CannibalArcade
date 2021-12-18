@@ -2,7 +2,7 @@
 // ******************************* Go Pong Yourself v0.1 ********************************
 /**
  * @author Evan Sklarski <esklarski@gmail.com>
- * @version 0.1
+ * @version 0.2
  * @see {@link - https://esklarski.github.io/CannibalArcade/}
  */
 // Go Pong yourself and have a good time.
@@ -11,7 +11,7 @@
 //
 // TODO:
 // - scale ball speed with # of volleys
-// - difficulty option with paddle width change?
+// - difficulty option: paddle width change?
 // - instruction screen... need:
 //       - 'Instruction' GameState
 //       - logic in GameManager for: gameManager.Instructions();
@@ -51,9 +51,9 @@ class GoPongYourself extends Game {
 
     // ball
     #BALL_RADIUS = 10;
-    #BALL_SPEED = 4;
-    #BALL_MIN_SPEED = 2;
-    #BALL_MAX_SPEED = 6;
+    #BALL_SPEED = 500;
+    #BALL_MIN_SPEED = 300;
+    #BALL_MAX_SPEED = 650;
     #BALL_SPEED_INCREMENT = 0.1;
     #ballX;
     #ballY;
@@ -61,16 +61,18 @@ class GoPongYourself extends Game {
     #ballSpeedY;
 
     // paddles
-    #PADDLE_CURVE = 2;
+    #PADDLE_CURVE = 0.4;
     #PADDLE_WIDTH = 150;
     #PADDLE_THICKNESS = 10;
-    #paddleLeftY;
-    #paddleRightY;
-    #paddleTopX;
-    #paddleBottomX;
+    /** Shared paddle Y coordinate. */
+    #paddleY;
+    /** Shared paddle X coordinate */
+    #paddleX;
 
     // score
+    /** # of continuous volleys. */
     #volleys = 0;
+    /** Maximum volleys achieved. */
     #maxVolleys = 0;
 
     // storage for event listener functions
@@ -121,7 +123,6 @@ class GoPongYourself extends Game {
 
     /**
      * @override
-     * @param {boolean} on
      */
     UiEvents(on) {
         if (this.#mouseClickEvent == null) {
@@ -138,19 +139,18 @@ class GoPongYourself extends Game {
 
 
     /** @override */
-    Loop() {
-        this.#moveEverything();
+    Loop(timeDelta) {
+        this.#moveEverything(timeDelta);
         this.#drawFrame();
     }
 
 
     /**
      * @override
-     * @param {boolean} on
      */
     GameEvents(on) {
         if (this.#mouseMoveEvent == null) {
-            this.#mouseMoveEvent = this.#setPaddlePositions.bind(this);
+            this.#mouseMoveEvent = this.#recordMousePosition.bind(this);
         }
 
         if (this.#keyPressEvent == null) {
@@ -172,9 +172,12 @@ class GoPongYourself extends Game {
 
     /** @override */
     PauseOverlay() {
-        drawRect(0, 0, canvas.width, canvas.height, 'black', 0.5);
+        // this keeps game visible under overlay, while resizing window
+        this.#drawFrame();
+
+        drawRect(0, 0, canvas.width, canvas.height, 'black', 0.3);
         drawText("press SPACE to resume",
-            canvas.width / 2, canvas.height / 4, this.#textColor, 'center');
+            canvasCenter.x, canvasCenter.y / 2, this.#textColor, 'center');
 
         drawButton(button2, 'Reset', this.#buttonColor, this.#buttonTextColor);
     }
@@ -186,18 +189,18 @@ class GoPongYourself extends Game {
 
         // Game Over text
         drawText("Game Over",
-            canvas.width / 2, 180, this.#textColor, 'center', LARGE_FONT);
+            canvasCenter.x, 180, this.#textColor, 'center', LARGE_FONT);
 
         // button
         drawButton(button2, 'Serve!', this.#buttonColor, this.#buttonTextColor);
 
         // final score
         drawText("Score: " + this.#volleys + " volleys.",
-            canvas.width / 2, (canvas.height / 2) + 60, this.#textColor, 'center');
+            canvasCenter.x, (canvasCenter.y) + 60, this.#textColor, 'center');
 
         // max score text
         drawText("Most volleys achieved: " + this.#maxVolleys,
-            canvas.width / 2, (canvas.height / 2) + 150, this.#textColor, 'center');
+        canvasCenter.x, (canvasCenter.y) + 150, this.#textColor, 'center');
 
         drawButton(buttonCorner3, "Exit to Title",
             this.#buttonTextColor, this.#buttonColor);
@@ -208,23 +211,18 @@ class GoPongYourself extends Game {
     /** @override */
     Reset() {
         if (this.#firstRun) {
-            if (localStorage.maxVolleysRecord) {
-                // read in previous score
-                this.#maxVolleys = parseInt( localStorage.maxVolleysRecord );
-            }
+            this.#maxVolleys = this.#loadScore();
 
             this.#firstRun = false;
         }
-
+        
         // center paddles
-        this.#paddleLeftY = canvas.height / 2 - this.#PADDLE_WIDTH / 2;
-        this.#paddleRightY = canvas.height / 2 - this.#PADDLE_WIDTH / 2;
-        this.#paddleTopX = canvas.width / 2 - this.#PADDLE_WIDTH / 2;
-        this.#paddleBottomX = canvas.width / 2 - this.#PADDLE_WIDTH / 2;
+        this.#mouseMovePos.y = canvasCenter.y + rect.top + root.scrollTop;
+        this.#mouseMovePos.x = canvasCenter.x + rect.left + root.scrollLeft;
 
         // center ball
-        this.#ballX = canvas.width / 2;
-        this.#ballY = canvas.height / 2;
+        this.#ballX = canvasCenter.x;
+        this.#ballY = canvasCenter.y;
 
         // reset score
         this.#volleys = 0;
@@ -232,41 +230,67 @@ class GoPongYourself extends Game {
         // serve!
         this.#serve();
     }
+
+
+    /** @override */
+    Resize(previousCanvas) {
+        // adjust paddle positions for new canvas size
+        this.#paddleX = this.#paddleCheckX(
+            this.#paddleX / previousCanvas.width * canvas.width
+        );
+
+        this.#paddleY = this.#paddleCheckY(
+            this.#paddleY / previousCanvas.height * canvas.height
+        );
+
+        // move ball relative to new canvas size
+        this.#ballX = this.#ballX / previousCanvas.width * canvas.width;
+
+        this.#ballY = this.#ballY / previousCanvas.height * canvas.height;
+    }
     
 
 
     // ****************************** EVENT FUNCTIONS ***********************************
     /**
-     * on 'mousemove' event handler
+     * @type {Coordinate}
+     * 
+     * Store most recent mouse move position. Used by #setPaddlePositions()
+     */
+    #mouseMovePos = { x: 0, y: 0 };
+    /**
+     * On 'mousemove' event handler.
      * @param {Event} evt
      */
-    #setPaddlePositions(evt) {
-        var mousePos = calculateMousePosition(evt);
-    
-        this.#paddleLeftY   = mousePos.y - (this.#PADDLE_WIDTH / 2);
-        this.#paddleRightY  = mousePos.y - (this.#PADDLE_WIDTH / 2);
-        this.#paddleTopX    = mousePos.x - (this.#PADDLE_WIDTH / 2);
-        this.#paddleBottomX = mousePos.x - (this.#PADDLE_WIDTH / 2);
+    #recordMousePosition(evt) {
+        this.#mouseMovePos.x = evt.clientX;
+        this.#mouseMovePos.y = evt.clientY;
     }
 
     /**
-     * on 'mousedown' event handler
+     * @type {Coordinate}
+     * 
+     * Store most recent mouse click position. Used by #mouseClick()
+     */
+    #mouseClickPos = { x: 0, y: 0 };
+    /**
+     * On 'mousedown' event handler.
      * @param {Event} evt
      */
     #mouseClick(evt) {
-        var mousePos = calculateMousePosition(evt);
+        this.#mouseClickPos = calculateMousePosition(evt);
 
         switch (gameManager.State) {
             case
                 GameState.Title: {
-                    if (isInButton(mousePos, button2)) { gameManager.Play(); }
+                    if (isInButton(this.#mouseClickPos, button2)) { gameManager.Play(); }
 
-                    if ( isInButton(mousePos, button5) ) {
+                    if ( isInButton(this.#mouseClickPos, button5) ) {
                         this.#practice = toggleState(this.#practice);
                         this.TitleScreen();
                     }
 
-                    if (isInButton(mousePos, buttonCorner3)) { gameManager.ExitGame(); }
+                    if (isInButton(this.#mouseClickPos, buttonCorner3)) { gameManager.ExitGame(); }
 
                     // buttonCorner4 - instructions // TODO
                     // if (isInButton(mousePos, buttonCorner4)) { gameManager.Instructions(); }
@@ -282,7 +306,7 @@ class GoPongYourself extends Game {
 
             case
                 GameState.Paused: {
-                    if (isInButton(mousePos, button2)) {
+                    if (isInButton(this.#mouseClickPos, button2)) {
                         gameManager.ResetGame();
                         gameManager.Title();
                     }
@@ -291,12 +315,12 @@ class GoPongYourself extends Game {
 
             case
                 GameState.GameOver: {
-                    if (isInButton(mousePos, button2)) {
+                    if (isInButton(this.#mouseClickPos, button2)) {
                         gameManager.ResetGame();
                         gameManager.Play();
                     }
 
-                    if (isInButton(mousePos, buttonCorner3)) {
+                    if (isInButton(this.#mouseClickPos, buttonCorner3)) {
                         gameManager.ResetGame();
                         gameManager.Title();
                     }
@@ -306,7 +330,7 @@ class GoPongYourself extends Game {
     }
 
     /**
-     * on 'keydown' event handler
+     * On 'keydown' event handler.
      * @param {Event} evt
      */
     #keyPress(evt) {
@@ -318,7 +342,7 @@ class GoPongYourself extends Game {
 
 
     // ************************ GoPongYourself FUNCTIONS ********************************
-    /** draw game frame */
+    /** Draw game frame. */
     #drawFrame() {    
         this.#drawGameBackground();
 
@@ -326,21 +350,17 @@ class GoPongYourself extends Game {
         drawCircle(this.#ballX, this.#ballY, this.#BALL_RADIUS, this.#ballColor);
 
         // Left Paddle
-        this.#paddleLeftY = this.#paddleCheckY(this.#paddleLeftY);
-        drawRect(MARGIN, this.#paddleLeftY, this.#PADDLE_THICKNESS, this.#PADDLE_WIDTH, this.#paddleColor);
+        drawRect(MARGIN, this.#paddleY, this.#PADDLE_THICKNESS, this.#PADDLE_WIDTH, this.#paddleColor);
 
         // Right Paddle
-        this.#paddleRightY = this.#paddleCheckY(this.#paddleRightY);
-        drawRect(canvas.width - this.#PADDLE_THICKNESS - MARGIN, this.#paddleRightY, this.#PADDLE_THICKNESS,
+        drawRect(canvas.width - this.#PADDLE_THICKNESS - MARGIN, this.#paddleY, this.#PADDLE_THICKNESS,
             this.#PADDLE_WIDTH, this.#paddleColor);
 
         // Top Paddle
-        this.#paddleTopX = this.#paddleCheckX(this.#paddleTopX);
-        drawRect(this.#paddleTopX, MARGIN, this.#PADDLE_WIDTH, this.#PADDLE_THICKNESS, this.#paddleColor);
+        drawRect(this.#paddleX, MARGIN, this.#PADDLE_WIDTH, this.#PADDLE_THICKNESS, this.#paddleColor);
 
         // Bottom Paddle
-        this.#paddleBottomX = this.#paddleCheckX(this.#paddleBottomX);
-        drawRect(this.#paddleBottomX, canvas.height - this.#PADDLE_THICKNESS - MARGIN, this.#PADDLE_WIDTH,
+        drawRect(this.#paddleX, canvas.height - this.#PADDLE_THICKNESS - MARGIN, this.#PADDLE_WIDTH,
             this.#PADDLE_THICKNESS, this.#paddleColor);
 
         this.#drawScore();
@@ -348,7 +368,7 @@ class GoPongYourself extends Game {
 
 
     /**
-     * draw single color background
+     * Draw single color background.
      * @param {string} backgroundColor
      */
     #drawTitleBackground() {
@@ -357,7 +377,7 @@ class GoPongYourself extends Game {
 
 
     /**
-     * draw background with margin
+     * Draw background with margin.
      * @param {string} backgroundColor bacground color
      * @param {string} marginColor margin color
      */
@@ -368,78 +388,96 @@ class GoPongYourself extends Game {
 
 
 
-    /** draw score on screen center */
+    /** Draw score on screen center. */
     #drawScore() {
         if (this.#volleys > 0) {
-            drawText(this.#volleys, canvas.width / 2, canvas.height / 2 + 15, this.#scoreColor, 'center');
+            drawText(this.#volleys, canvasCenter.x, canvasCenter.y + 15, this.#scoreColor, 'center');
         }
     }
 
 
-    /** move paddles and balls */
-    #moveEverything() {
-        var rebounded = false;
-        var volleyed = false;
+    // result variables for #moveEverything()
+    #rebounded = false;
+    #volleyed = false;
+    /** Move paddles and ball, collision detection. */
+    #moveEverything(timeDelta) {
+        this.#rebounded = false;
+        this.#volleyed = false;
 
-        // Left Paddle [paddleLeftY]
+        // get latest mouse position for paddles
+        this.#setPaddlePositions();
+
+        // Left Paddle [paddleY]
         if (this.#ballX < MARGIN + this.#PADDLE_THICKNESS) {
             this.#ballX = MARGIN + this.#PADDLE_THICKNESS + 2;
 
-            if (this.#ballY > this.#paddleLeftY && this.#ballY < this.#paddleLeftY + this.#PADDLE_WIDTH) {
-                this.#ballSpeedY += this.#rebound(this.#paddleLeftY, this.#ballY);
-                volleyed = true;
+            if (
+                this.#ballY > this.#paddleY - MARGIN &&
+                this.#ballY < this.#paddleY + this.#PADDLE_WIDTH + MARGIN
+            ) {
+                this.#ballSpeedY += this.#rebound(this.#paddleY, this.#ballY);
+                this.#volleyed = true;
             }
 
-            rebounded = true;
+            this.#rebounded = true;
             this.#ballSpeedX *= -1;
         }
 
-        // Right Paddle [paddleRightY]
+        // Right Paddle [paddleY]
         if (this.#ballX > canvas.width - MARGIN - this.#PADDLE_THICKNESS) {
             this.#ballX = canvas.width - MARGIN - this.#PADDLE_THICKNESS - 2;
 
-            if (this.#ballY > this.#paddleRightY && this.#ballY < this.#paddleRightY + this.#PADDLE_WIDTH) {
-                this.#ballSpeedY += this.#rebound(this.#paddleRightY, this.#ballY);
-                volleyed = true;
+            if (
+                this.#ballY > this.#paddleY - MARGIN &&
+                this.#ballY < this.#paddleY + this.#PADDLE_WIDTH + MARGIN
+            ) {
+                this.#ballSpeedY += this.#rebound(this.#paddleY, this.#ballY);
+                this.#volleyed = true;
             }
 
-            rebounded = true;
+            this.#rebounded = true;
             this.#ballSpeedX *= -1;
         }
 
-        // Top Paddle [paddleTopX]
+        // Top Paddle [paddleX]
         if (this.#ballY < MARGIN + this.#PADDLE_THICKNESS) {
             this.#ballY = MARGIN + this.#PADDLE_THICKNESS + 2;
 
-            if (this.#ballX > this.#paddleTopX && this.#ballX < this.#paddleTopX + this.#PADDLE_WIDTH) {
-                this.#ballSpeedX += this.#rebound(this.#paddleTopX, this.#ballX);
-                volleyed = true;
+            if (
+                this.#ballX > this.#paddleX - MARGIN &&
+                this.#ballX < this.#paddleX + this.#PADDLE_WIDTH + MARGIN
+            ) {
+                this.#ballSpeedX += this.#rebound(this.#paddleX, this.#ballX);
+                this.#volleyed = true;
             }
 
-            rebounded = true;
+            this.#rebounded = true;
             this.#ballSpeedY *= -1;
         }
 
-        // Bottom Paddle [paddleBottomX]
+        // Bottom Paddle [paddleX]
         if (this.#ballY > canvas.height - MARGIN - this.#PADDLE_THICKNESS) {
             this.#ballY = canvas.height - MARGIN - this.#PADDLE_THICKNESS - 2;
 
-            if (this.#ballX > this.#paddleBottomX && this.#ballX < this.#paddleBottomX + this.#PADDLE_WIDTH) {
-                this.#ballSpeedX += this.#rebound(this.#paddleBottomX, this.#ballX);
-                volleyed = true;
+            if (
+                this.#ballX > this.#paddleX - MARGIN &&
+                this.#ballX < this.#paddleX + this.#PADDLE_WIDTH + MARGIN
+            ) {
+                this.#ballSpeedX += this.#rebound(this.#paddleX, this.#ballX);
+                this.#volleyed = true;
             }
 
-            rebounded = true;
+            this.#rebounded = true;
             this.#ballSpeedY *= -1;
         }
 
         // scoring
-        if (rebounded && volleyed) {
+        if (this.#rebounded && this.#volleyed) {
             this.#volleys += 1;
 
             this.#ballSpeedCheck();
         }
-        else if (rebounded) {
+        else if (this.#rebounded) {
 
             // practice mode switch
             if (this.#practice) {
@@ -449,7 +487,7 @@ class GoPongYourself extends Game {
                 // save max score
                 if (this.#volleys > this.#maxVolleys) {
                     this.#maxVolleys = this.#volleys;
-                    localStorage.maxVolleysRecord = this.#maxVolleys.toString();
+                    this.#saveScore(this.#maxVolleys);
                 }
 
                 // trigger gameover
@@ -458,12 +496,25 @@ class GoPongYourself extends Game {
         }
 
         // move ball
-        this.#ballX += this.#ballSpeedX;
-        this.#ballY += this.#ballSpeedY;
+        this.#ballX += this.#ballSpeedX * timeDelta;
+        this.#ballY += this.#ballSpeedY * timeDelta;
     }
 
 
-    /** check to keep Y paddles on screen */
+    /** Set paddle position for current frame. */
+    #setPaddlePositions() {
+        this.#paddleY = this.#paddleCheckY(
+            (this.#mouseMovePos.y - rect.top - root.scrollTop) - (this.#PADDLE_WIDTH / 2)
+        );
+        
+
+        this.#paddleX = this.#paddleCheckX(
+            (this.#mouseMovePos.x - rect.left - root.scrollLeft) - (this.#PADDLE_WIDTH / 2)
+        );
+    }
+
+
+    /** Check to keep Y paddles on screen. */
     #paddleCheckY(paddleYPos) {
         if (paddleYPos < MARGIN) {
             paddleYPos = MARGIN;
@@ -474,7 +525,7 @@ class GoPongYourself extends Game {
 
         return paddleYPos;
     }
-    /** check to keep X paddles on screen */
+    /** Check to keep X paddles on screen. */
     #paddleCheckX(paddleXPos) {
         if (paddleXPos < MARGIN) {
             paddleXPos = MARGIN;
@@ -487,54 +538,87 @@ class GoPongYourself extends Game {
     }
 
 
-    /** serve ball with random vector */
+    #ballXdirection = 0;
+    #ballXmagnitude = 0;
+    #ballYdirection = 0;
+    #ballYmagnitude = 0;
+    /** Serve ball with random vector. */
     #serve() {
         // random X vector
-        var ballXdirection = (Math.random() < 0.6) ? -1 : 1;
-        var ballXmagnitude = Math.random(123) * this.#BALL_SPEED;
-        this.#ballSpeedX = ballXmagnitude * ballXdirection;
+        this.#ballXdirection = (Math.random() < 0.6) ? -1 : 1;
+        this.#ballXmagnitude = Math.random(123) * this.#BALL_SPEED;
+        this.#ballSpeedX = this.#ballXmagnitude * this.#ballXdirection;
 
         // random Y vector
-        var ballYdirection = (Math.random() < 0.6) ? -1 : 1;
-        var ballYmagnitude = Math.random() * this.#BALL_SPEED;
-        this.#ballSpeedY = ballYmagnitude * ballYdirection;
+        this.#ballYdirection = (Math.random() < 0.6) ? -1 : 1;
+        this.#ballYmagnitude = Math.random() * this.#BALL_SPEED;
+        this.#ballSpeedY = this.#ballYmagnitude * this.#ballYdirection;
 
-        // check to keep serve fair and interesting
-        if (Math.abs(this.#ballSpeedX) + Math.abs(this.#ballSpeedY) < this.#BALL_MAX_SPEED) {
-            var diff = this.#BALL_MAX_SPEED - (this.#ballSpeedX + this.#ballSpeedY);
-            this.#ballSpeedX += (diff / 2) * ballXdirection;
-            this.#ballSpeedY += (diff / 2) * ballYdirection;
-        }
+        this.#ballSpeedCheck();
     }
 
 
-    /** enforce MIN and MAX ball speed */
+    /** Enforce MIN and MAX ball speed. */
     #ballSpeedCheck() {
-        var Xdirection = this.#ballSpeedX / Math.abs(this.#ballSpeedX);
-        var Xmagnitude = Math.abs(this.#ballSpeedX);
+        this.#ballXdirection = this.#ballSpeedX / Math.abs(this.#ballSpeedX);
+        this.#ballXmagnitude = Math.abs(this.#ballSpeedX);
 
-        var Ydirection = this.#ballSpeedY / Math.abs(this.#ballSpeedY);
-        var Ymagnitude = Math.abs(this.#ballSpeedY);
+        this.#ballYdirection = this.#ballSpeedY / Math.abs(this.#ballSpeedY);
+        this.#ballYmagnitude = Math.abs(this.#ballSpeedY);
 
-        if (Xmagnitude > this.#BALL_MAX_SPEED) {
-            this.#ballSpeedX = this.#BALL_MAX_SPEED * Xdirection;
+        if (this.#ballXmagnitude > this.#BALL_MAX_SPEED) {
+            this.#ballSpeedX = this.#BALL_MAX_SPEED * this.#ballXdirection;
         }
-        if (Ymagnitude > this.#BALL_MAX_SPEED) {
-            this.#ballSpeedY = this.#BALL_MAX_SPEED * Ydirection;
+        if (this.#ballYmagnitude > this.#BALL_MAX_SPEED) {
+            this.#ballSpeedY = this.#BALL_MAX_SPEED * this.#ballYdirection;
         }
 
-        if (Xmagnitude < this.#BALL_MIN_SPEED) {
-            this.#ballSpeedX = this.#BALL_MIN_SPEED * Xdirection;
+        if (this.#ballXmagnitude < this.#BALL_MIN_SPEED) {
+            this.#ballSpeedX = this.#BALL_MIN_SPEED * this.#ballXdirection;
         }
-        if (Ymagnitude < this.#BALL_MIN_SPEED) {
-            this.#ballSpeedY = this.#BALL_MIN_SPEED * Ydirection;
+        if (this.#ballYmagnitude < this.#BALL_MIN_SPEED) {
+            this.#ballSpeedY = this.#BALL_MIN_SPEED * this.#ballYdirection;
         }
     }
 
 
-    /** calculate rebound speed */
+    /** Difference between paddle center and ball position on rebound. */
+    #deltaPaddle = 0;
+    /**
+     * Calculate rebound speed.
+     * @param {number} paddlePos - paddle X or Y position on wall
+     * @param {number} ballPos - ball position along paddle axis
+     */
     #rebound(paddlePos, ballPos) {
-        var delta = ballPos - (paddlePos + this.#PADDLE_WIDTH / 2);
-        return ( delta / (this.#PADDLE_WIDTH / 2) ) * this.#PADDLE_CURVE;
+        this.#deltaPaddle = ballPos - (paddlePos + this.#PADDLE_WIDTH / 2);
+        return (this.#deltaPaddle / (this.#PADDLE_WIDTH / 2)) * (this.#BALL_SPEED * this.#PADDLE_CURVE);
+    }
+
+
+    /** Load high score from localStorage if it exists. */
+    #loadScore() {
+        let score = 0;
+        if (localStorage.maxVolleysRecord) {
+            // read in previous score
+            try {
+                score = parseInt( localStorage.maxVolleysRecord );
+            }
+            catch {
+                // invalide data
+                score = 0;
+            }
+        }
+
+        return score;
+    }
+
+
+    /**
+     * Save high score to localStorage.
+     * 
+     * @param {number} volleys
+     */
+    #saveScore(volleys) {
+        localStorage.maxVolleysRecord = volleys.toString();
     }
 }

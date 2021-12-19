@@ -55,12 +55,12 @@ function setup3x2SmTest() {
 function test3x2SmButtons(evt) {
     let mousePos = calculateMousePosition(evt);
 
-    if (isInButton(mousePos, button1)) { toggle1 = toggleState(toggle1); }
-    if (isInButton(mousePos, button2)) { toggle2 = toggleState(toggle2); }
-    if (isInButton(mousePos, button3)) { toggle3 = toggleState(toggle3); }
-    if (isInButton(mousePos, button4)) { toggle4 = toggleState(toggle4); }
-    if (isInButton(mousePos, button5)) { toggle5 = toggleState(toggle5); }
-    if (isInButton(mousePos, button6)) { toggle6 = toggleState(toggle6); }
+    if (isInButton(mousePos, button1)) { toggle1 = toggleBool(toggle1); }
+    if (isInButton(mousePos, button2)) { toggle2 = toggleBool(toggle2); }
+    if (isInButton(mousePos, button3)) { toggle3 = toggleBool(toggle3); }
+    if (isInButton(mousePos, button4)) { toggle4 = toggleBool(toggle4); }
+    if (isInButton(mousePos, button5)) { toggle5 = toggleBool(toggle5); }
+    if (isInButton(mousePos, button6)) { toggle6 = toggleBool(toggle6); }
 
     draw3x2SmButtonScreen();
 }
@@ -109,12 +109,12 @@ function setup3x2LgeTest() {
 function test3x2LgeButtons(evt) {
     let mousePos = calculateMousePosition(evt);
 
-    if (isInButton(mousePos, buttonLge1)) { toggle1 = toggleState(toggle1); }
-    if (isInButton(mousePos, buttonLge2)) { toggle2 = toggleState(toggle2); }
-    if (isInButton(mousePos, buttonLge3)) { toggle3 = toggleState(toggle3); }
-    if (isInButton(mousePos, buttonLge4)) { toggle4 = toggleState(toggle4); }
-    if (isInButton(mousePos, buttonLge5)) { toggle5 = toggleState(toggle5); }
-    if (isInButton(mousePos, buttonLge6)) { toggle6 = toggleState(toggle6); }
+    if (isInButton(mousePos, buttonLge1)) { toggle1 = toggleBool(toggle1); }
+    if (isInButton(mousePos, buttonLge2)) { toggle2 = toggleBool(toggle2); }
+    if (isInButton(mousePos, buttonLge3)) { toggle3 = toggleBool(toggle3); }
+    if (isInButton(mousePos, buttonLge4)) { toggle4 = toggleBool(toggle4); }
+    if (isInButton(mousePos, buttonLge5)) { toggle5 = toggleBool(toggle5); }
+    if (isInButton(mousePos, buttonLge6)) { toggle6 = toggleBool(toggle6); }
 
     draw3x2LgeTestScreen();
 }
@@ -175,10 +175,10 @@ function setup2x2LgeTest() {
 function test2x2LgeButtons(evt) {
     let mousePos = calculateMousePosition(evt);
 
-    if (isInButton(mousePos, buttonLge7)) { toggle1 = toggleState(toggle1); }
-    if (isInButton(mousePos, buttonLge8)) { toggle2 = toggleState(toggle2); }
-    if (isInButton(mousePos, buttonLge9)) { toggle3 = toggleState(toggle3); }
-    if (isInButton(mousePos, buttonLge10)) { toggle4 = toggleState(toggle4); }
+    if (isInButton(mousePos, buttonLge7)) { toggle1 = toggleBool(toggle1); }
+    if (isInButton(mousePos, buttonLge8)) { toggle2 = toggleBool(toggle2); }
+    if (isInButton(mousePos, buttonLge9)) { toggle3 = toggleBool(toggle3); }
+    if (isInButton(mousePos, buttonLge10)) { toggle4 = toggleBool(toggle4); }
 
     draw2x2LgeTest();
 }
@@ -235,10 +235,10 @@ function setupCornerTest() {
 function testCornerButtons(evt) {
     let mousePos = calculateMousePosition(evt);
 
-    if (isInButton(mousePos, buttonCorner1)) { toggle1 = toggleState(toggle1); }
-    if (isInButton(mousePos, buttonCorner2)) { toggle2 = toggleState(toggle2); }
-    if (isInButton(mousePos, buttonCorner3)) { toggle3 = toggleState(toggle3); }
-    if (isInButton(mousePos, buttonCorner4)) { toggle4 = toggleState(toggle4); }
+    if (isInButton(mousePos, buttonCorner1)) { toggle1 = toggleBool(toggle1); }
+    if (isInButton(mousePos, buttonCorner2)) { toggle2 = toggleBool(toggle2); }
+    if (isInButton(mousePos, buttonCorner3)) { toggle3 = toggleBool(toggle3); }
+    if (isInButton(mousePos, buttonCorner4)) { toggle4 = toggleBool(toggle4); }
 
     drawCornerTest();
 }

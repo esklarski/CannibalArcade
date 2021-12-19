@@ -26,7 +26,7 @@ let buttonClicked = false;
  * @param {boolean} toggle
  * @returns {boolean}
  */
-const toggleState = toggle => (toggle) ? false : true;
+const toggleBool = toggle => (toggle) ? false : true;
 
 // generic toggles to store button state/s
 let toggle1 = false, toggle2 = false, toggle3 = false,

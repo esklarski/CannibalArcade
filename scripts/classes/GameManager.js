@@ -268,7 +268,7 @@ class GameManager {
         if (isInButton(mousePos, buttonLge7)) { gameManager.LoadGame( new GoPongYourself() ); return; }
         if (isInButton(mousePos, buttonLge8)) { gameManager.LoadGame( new SomeTennisGame() ); return; }
         if (isInButton(mousePos, buttonLge9)) { gameManager.LoadGame( new BreakBricks() ); return; }
-        if (isInButton(mousePos, buttonLge10)) { toggle4 = toggleState(toggle4); }
+        if (isInButton(mousePos, buttonLge10)) { toggle4 = toggleBool(toggle4); }
 
         this.#drawGameMenu();
     }

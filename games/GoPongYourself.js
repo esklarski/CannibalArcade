@@ -286,7 +286,7 @@ class GoPongYourself extends Game {
                     if (isInButton(this.#mouseClickPos, button2)) { gameManager.Play(); }
 
                     if ( isInButton(this.#mouseClickPos, button5) ) {
-                        this.#practice = toggleState(this.#practice);
+                        this.#practice = toggleBool(this.#practice);
                         this.TitleScreen();
                     }
 

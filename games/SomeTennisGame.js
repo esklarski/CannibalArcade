@@ -2,7 +2,7 @@
 // ******************************* Some Tennis Game v0.1 ********************************
 /**
  * @author Evan Sklarski <esklarski@gmail.com>
- * @version 0.1
+ * @version 0.2
  * @see {@link - https://esklarski.github.io/CannibalArcade/}
  */
 // Some tennis game, played against the AI that may one day rule the world.
@@ -37,23 +37,24 @@ class SomeTennisGame extends Game {
 
     // ball
     #BALL_RADIUS = 10;
-    #BALL_SPEED = 6;
-    #ballX; // = 75;
-    #ballY; // = 75;
-    #ballSpeedX; // = 8;
-    #ballSpeedY; // = 8;
+    #BALL_SPEED = 500;
+    #ballX = 0;
+    #ballY = 0;
+    #ballSpeedX = 0;
+    #ballSpeedY = 0;
 
     // paddles
     #PADDLE_HEIGHT = 100;
     #PADDLE_THICKNESS = 10;
-    #paddle1Y;
-    #paddle2Y;
+    #PADDLE_CURVE = 0.9;
+    #paddle1Y = 0;
+    #paddle2Y = 0;
 
     // score
     #WIN_SCORE = 10;
-    #player1Score;
-    #player2Score;
-    #winner;
+    #player1Score = 0;
+    #player2Score = 0;
+    #winner = '';
 
     /** Game Title - Some Tennis Game */
     static #TITLE = "Some Tennis Game";
@@ -114,9 +115,9 @@ class SomeTennisGame extends Game {
     }
 
     /** @override */
-    Loop() {
+    Loop(timeDelta) {
         // move everything
-        this.#moveEverything();
+        this.#moveEverything(timeDelta);
         // draw frame
         this.#drawEverything();
     }
@@ -190,14 +191,15 @@ class SomeTennisGame extends Game {
 
 
     // ****************************** EVENT FUNCTIONS ***********************************
+    #mousePos = { x: 0, y: 0 };
     /**
      * on 'mousemove' event handler
      * @param {Event} evt
      */
     #setPaddlePositions(evt) {
-        let mousePos = calculateMousePosition(evt);
+        this.#mousePos = calculateMousePosition(evt);
 
-        this.#paddle1Y = mousePos.y - (this.#PADDLE_HEIGHT / 2);
+        this.#paddle1Y = this.#mousePos.y - (this.#PADDLE_HEIGHT / 2);
 
         // if (!this.#AI) {
         //     // player 2 control switch
@@ -210,20 +212,20 @@ class SomeTennisGame extends Game {
      * @param {Event} evt
      */
     #mouseClick(evt) {
-        let mousePos = calculateMousePosition(evt);
+        this.#mousePos = calculateMousePosition(evt);
 
         switch (gameManager.State) {
             case
                 GameState.Title: {
-                    if (isInButton(mousePos, button2)) { gameManager.Play(); }
+                    if (isInButton(this.#mousePos, button2)) { gameManager.Play(); }
 
-                    if (isInButton(mousePos, buttonCorner3)) { gameManager.ExitGame(); }
+                    if (isInButton(this.#mousePos, buttonCorner3)) { gameManager.ExitGame(); }
                 }
                 break;
 
             case
                 GameState.Paused: {
-                    if (isInButton(mousePos, button2)) {
+                    if (isInButton(this.#mousePos, button2)) {
                         gameManager.ResetGame();
                         gameManager.Title();
                     }
@@ -232,12 +234,12 @@ class SomeTennisGame extends Game {
 
             case
                 GameState.GameOver: {
-                    if (isInButton(mousePos, button5)) {
+                    if (isInButton(this.#mousePos, button5)) {
                         gameManager.ResetGame();
                         gameManager.Play();
                     }
 
-                    if (isInButton(mousePos, buttonCorner3)) {
+                    if (isInButton(this.#mousePos, buttonCorner3)) {
                         gameManager.ResetGame();
                         gameManager.Title();
                     }
@@ -259,16 +261,17 @@ class SomeTennisGame extends Game {
 
 
     // ************************ SomeTennisGame FUNCTIONS ********************************
+    #deltaY = 0;
     /** move everything that needs moving */
-    #moveEverything() {
+    #moveEverything(timeDelta) {
         // left goal
         if (this.#ballX < MARGIN + this.#PADDLE_THICKNESS) {
             // bounce off paddle
             if (this.#ballY > this.#paddle1Y && this.#ballY < this.#paddle1Y + this.#PADDLE_HEIGHT) {
                 this.#ballSpeedX *= -1;
 
-                let deltaY = this.#ballY - (this.#paddle1Y + this.#PADDLE_HEIGHT / 2);
-                this.#ballSpeedY = deltaY * 0.15;
+                this.#deltaY = this.#ballY - (this.#paddle1Y + this.#PADDLE_HEIGHT / 2);
+                this.#ballSpeedY = (this.#deltaY / (this.#PADDLE_HEIGHT / 2)) * (this.#BALL_SPEED * this.#PADDLE_CURVE);
             }
             // goal
             else {
@@ -283,8 +286,8 @@ class SomeTennisGame extends Game {
             if (this.#ballY > this.#paddle2Y && this.#ballY < this.#paddle2Y + this.#PADDLE_HEIGHT) {
                 this.#ballSpeedX *= -1;
 
-                let deltaY = this.#ballY - (this.#paddle2Y + this.#PADDLE_HEIGHT / 2);
-                this.#ballSpeedY = deltaY * 0.15;
+                this.#deltaY = this.#ballY - (this.#paddle2Y + this.#PADDLE_HEIGHT / 2);
+                this.#ballSpeedY = (this.#deltaY / (this.#PADDLE_HEIGHT/2)) * (this.#BALL_SPEED * this.#PADDLE_CURVE);
             }
             // goal
             else {
@@ -299,8 +302,9 @@ class SomeTennisGame extends Game {
         }
 
         // move ball
-        this.#ballX += this.#ballSpeedX;
-        this.#ballY += this.#ballSpeedY;
+        // TODO use deltaTime
+        this.#ballX += this.#ballSpeedX * timeDelta;
+        this.#ballY += this.#ballSpeedY * timeDelta;
     }
 
 
@@ -393,24 +397,22 @@ class SomeTennisGame extends Game {
     }
 
 
+    #paddlePosition = 0;
+    #desiredPosition = 0;
+    #direction = 0;
     /** move AI paddle */
     #moveComputerPaddle() {
         // paddle center
-        let paddlePosition = this.#paddle2Y + this.#PADDLE_HEIGHT / 2;
+        this.#paddlePosition = this.#paddle2Y + this.#PADDLE_HEIGHT / 2;
         // ball center or canvas middle
-        let desiredPosition = (this.#ballSpeedX < 0)? canvas.height/2 : this.#ballY;
+        this.#desiredPosition = (this.#ballSpeedX < 0)? canvas.height/2 : this.#ballY;
 
         // how much to move?
-        let direction = desiredPosition - paddlePosition;
+        this.#direction = this.#desiredPosition - this.#paddlePosition;
 
         // if not in deadzone move paddle
-        if (direction > this.#AI_SPEED*2 || direction < -this.#AI_SPEED*2) {
-            if (direction > 0) {
-                this.#paddle2Y += this.#AI_SPEED;
-            }
-            else if (direction < 0) {
-                this.#paddle2Y -= this.#AI_SPEED;
-            }
+        if (this.#direction > this.#AI_SPEED*2 || this.#direction < -this.#AI_SPEED*2) {
+            this.#paddle2Y += this.#AI_SPEED * (this.#direction / Math.abs(this.#direction));
         }
     }
 }

@@ -799,24 +799,15 @@ class BreakBricks extends Game {
     #testPatternBrickGrid() {
         for (this.#i = 0; this.#i < this.#BRICK_COLS * this.#BRICK_ROWS; this.#i++) {
             if (this.#i % this.#BRICK_COLS == 0) {
-                this.#drawBrickNow = this.#toggleBool(this.#drawBrickNow);
+                this.#drawBrickNow = toggleBool(this.#drawBrickNow);
             }
 
-            this.#drawBrickNow = this.#toggleBool(this.#drawBrickNow);
+            this.#drawBrickNow = toggleBool(this.#drawBrickNow);
 
             // randomize bricks 0 or BRICK_HP
-            this.#brickGrid[i] = (this.#drawBrickNow) ? this.#BRICK_HP : 0;
+            this.#brickGrid[this.#i] = (this.#drawBrickNow) ? this.#BRICK_HP : 0;
         }
     }
-
-
-    /**
-     * Takes a boolean value and returns the opposite.
-     * Used by {@link testPatternBrickGrid}.
-     * @param {boolean} bool
-     * @returns {boolean} the opposite value
-     */
-    #toggleBool = (bool) => { return (bool == true) ? false : true; }
 
 
 

@@ -76,8 +76,12 @@ class GameManager {
 
     /** Unload current game and return to game select. */
     ExitGame() {
+        // ensure events turn off by forcing state change
+        this.#gameState = GameState.Menu;
+
         // turn off all events
         this.#game.UiEvents(false);
+        this.#game.GameEvents(false);
 
         // null current game
         this.#game = null;
@@ -227,13 +231,25 @@ class GameManager {
                 GameState.Menu: { this.#drawGameMenu(); }
                 break;
             case
-                GameState.Title: { this.#game.TitleScreen(); }
+                GameState.Title: {
+                    if (this.#game.TitleScreen() == false) {
+                        this.#setState(GameState.Playing);
+                    }
+                }
                 break;
             case
-                GameState.Paused: { this.#game.PauseOverlay(); }
+                GameState.Paused: {
+                    if (this.#game.PauseOverlay() == false) {
+                        this.ExitGame();
+                    }
+                }
                 break;
             case
-                GameState.GameOver: { this.#game.GameOverScreen(); }
+                GameState.GameOver: {
+                    if (this.#game.GameOverScreen() == false) {
+                        this.ExitGame();
+                    }
+                }
                 break;
         }
     }
@@ -268,7 +284,10 @@ class GameManager {
         if (isInButton(mousePos, buttonLge7)) { gameManager.LoadGame( new GoPongYourself() ); return; }
         if (isInButton(mousePos, buttonLge8)) { gameManager.LoadGame( new SomeTennisGame() ); return; }
         if (isInButton(mousePos, buttonLge9)) { gameManager.LoadGame( new BreakBricks() ); return; }
+        // choose this:
         if (isInButton(mousePos, buttonLge10)) { toggle4 = toggleBool(toggle4); }
+        // or this: (to load minimum example)
+        // if (isInButton(mousePos, buttonLge10)) { gameManager.LoadGame( new MinimumExample() ); return; }
 
         this.#drawGameMenu();
     }

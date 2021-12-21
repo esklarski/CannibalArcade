@@ -38,17 +38,17 @@ class Game {
     /**
      * {@link TitleScreen} - draw title screen
      */
-    TitleScreen() { return null; }
+    TitleScreen() { return false; }
 
     /**
      * {@link PauseOverlay} - draw pause overlay
      */
-    PauseOverlay() { return null; }
+    PauseOverlay() { return false; }
     
     /**
      * {@link GameOverScreen} - draw gameover screen
      */
-    GameOverScreen() { return null; }
+    GameOverScreen() { return false; }
 
 
     // *************************** EVENTS ***************************
@@ -57,13 +57,13 @@ class Game {
      * {@link UiEvents} - toggle ui events on/off
      * @param {boolean} on
      */
-    UiEvents(on) { return null; }
+    UiEvents(on) { return false; }
 
     /**
      * {@link GameEvents} - toggle game events on/off
      * @param {boolean} on
      */
-    GameEvents(on) { return null; }
+    GameEvents(on) { return false; }
 
 
     // ************************* GAME LOOP **************************
@@ -71,12 +71,12 @@ class Game {
     /**
      * {@link Loop} - main game logic loop
      */
-    Loop() { return null; }
+    Loop() { return false; }
 
     /**
      * {@link Reset} - reset game parameters
      */
-    Reset() { return null; }
+    Reset() { return false; }
 
 
     // *************************** RESIZE ***************************
@@ -86,5 +86,5 @@ class Game {
      * 
      * @param {number[]} previousCanvas [canvas.width, canvas.height]
      */
-    Resize(previousCanvas) { return null; }
+    Resize(previousCanvas) { return false; }
 }

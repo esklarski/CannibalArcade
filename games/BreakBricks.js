@@ -28,7 +28,7 @@ class BreakBricks extends Game {
 
     /** Bounce off bottom wall too. */
     #practice = false;
-    #windowInput = true;
+    #windowInput = false;
 
     // colors - Vapour Wave
     #textColor = VaporWave['GREEN'];

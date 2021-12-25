@@ -10,7 +10,8 @@
 //   - Go Pong Yourself
 //   - Some Tennis Game
 //
-// TODO move basic events (mouse) into index.js as opposed to in each game.
+// TODO move basic events (mouse) into index.js as opposed to in each game?
+// TODO enforce an aspect ration on cavans, sizing to window doesn't work with all games
 // **************************************************************************************
 
 /** debug mode? */
@@ -98,12 +99,14 @@ function initialize() {
 }
 
 function sizeCanvas() {
-    let framePadding = (window.innerWidth > window.innerHeight)
-        ? window.innerHeight / 10
-        : window.innerWidth / 10;
+    let width =  document.documentElement.clientWidth;
+    let height = document.documentElement.clientHeight
+    let framePadding = (width > height)
+        ? height / 10
+        : width / 10;
 
-    canvas.width = window.innerWidth - framePadding;
-    canvas.height = window.innerHeight - framePadding;
+    canvas.width = width - framePadding;
+    canvas.height = height - framePadding;
     canvasCenter = {
         x: canvas.width / 2,
         y: canvas.height / 2,

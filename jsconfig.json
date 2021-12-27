@@ -17,6 +17,7 @@
         "scripts/static/ColorPaletts.js",
         "scripts/static/Drawing.js",
         "scripts/static/Buttons.js",
+        "scripts/static/Ratio.js",
         "games/GoPongYourself.js",
         "games/SomeTennisGame.js",
         "games/BreakBricks.js",

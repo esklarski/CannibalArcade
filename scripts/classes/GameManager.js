@@ -47,6 +47,15 @@ class GameManager {
         return this.#gameState;
     }
 
+    get Ratio() {
+        if (this.#game != null) {
+            return this.#game.ratio;
+        }
+        else {
+            return Ratio.FourByThree;
+        }
+    }
+
 
 
     // ******************************** BASIC METHODS ***********************************
@@ -65,6 +74,8 @@ class GameManager {
         this.#gameMenuEvents(false);
 
         this.#game = game;
+
+        resizeCanvas();
 
         // initialize game properties
         this.ResetGame();
@@ -85,6 +96,8 @@ class GameManager {
 
         // null current game
         this.#game = null;
+
+        resizeCanvas();
 
         // go to menu screen
         this.Start();

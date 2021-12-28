@@ -28,6 +28,12 @@
  * @extends Game
  */
 class GoPongYourself extends Game {
+    /** Game Title - Go Pong Yourself */
+    static #TITLE = "Go Pong Yourself";
+    ratio = Ratio.FourByThree;
+
+    /** practice mode? */
+    #practice = false;
 
     // colors
     #fieldColor = TheFutureIsPurple["PURPLE"];
@@ -38,16 +44,6 @@ class GoPongYourself extends Game {
     #buttonColor = TheFutureIsPurple["PINK"];
     #buttonTextColor = TheFutureIsPurple["PURPLE"];
     #scoreColor = TheFutureIsPurple["TEAL"];
-
-    // Title
-    /**
-     * @static
-     * @type {string} name of game
-     */
-    static #TITLE = "Go Pong Yourself";
-
-    /** practice mode? */
-    #practice = false;
 
     // ball
     #BALL_RADIUS = 10;

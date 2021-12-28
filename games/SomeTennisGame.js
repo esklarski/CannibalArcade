@@ -58,6 +58,7 @@ class SomeTennisGame extends Game {
 
     /** Game Title - Some Tennis Game */
     static #TITLE = "Some Tennis Game";
+    ratio = Ratio.SixteenByNine;
 
     // storage for event listener functions
     /** @type {Function} store bound function */

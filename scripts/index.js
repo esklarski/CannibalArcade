@@ -9,6 +9,7 @@
 // Games:
 //   - Go Pong Yourself
 //   - Some Tennis Game
+//   - Break Bricks
 //
 // TODO move basic events (mouse) into index.js as opposed to in each game?
 // TODO enforce an aspect ration on cavans, sizing to window doesn't work with all games
@@ -16,6 +17,7 @@
 
 /** debug mode? */
 let testScreen = false;
+let resizable = false;
 
 /** small font */
 const SMALL_FONT = "20px Veranda";
@@ -88,42 +90,22 @@ window.onload = function () {
     }
 }
 
+
 /** initialize canvas */
 function initialize() {
     canvas = document.getElementById("gameCanvas");
     canvasContext = canvas.getContext("2d");
 
-    sizeCanvas();
-
     gameManager = new GameManager();
-}
 
-function sizeCanvas() {
-    let width =  document.documentElement.clientWidth;
-    let height = document.documentElement.clientHeight
-    let framePadding = (width > height)
-        ? height / 10
-        : width / 10;
-
-    canvas.width = width - framePadding;
-    canvas.height = height - framePadding;
-    canvasCenter = {
-        x: canvas.width / 2,
-        y: canvas.height / 2,
-    };
-
-    rect = canvas.getBoundingClientRect();
-    root = document.documentElement;
-}
-
-window.onresize = function () {
-    // store previous canvas dimensions
-    let previousCanvas = { width: canvas.width, height: canvas.height };
-
-    // reset things here
-    sizeCanvas();
-
-    gameManager.ResizeGame(previousCanvas);
+    // resize disabled for now, need to adjust UI layout system...
+    if (resizable) {
+        window.addEventListener('resize', resize);
+        resizeCanvas();
+    }
+    else {
+        setCanvasSize();
+    }
 }
 
 
@@ -142,4 +124,52 @@ function calculateMousePosition(evt) {
 
     // return mouse position
     return { x: mouseX, y: mouseY };
+}
+
+
+// Do I need this?
+// const MIN_CANVAS_WIDTH = 1000;
+// const MIN_CANVAS_HEIGHT = 750;
+function resizeCanvas() {
+    if (!resizable) return;
+    
+    let width = document.documentElement.clientWidth;
+    let height = document.documentElement.clientHeight;
+    let ratio = gameManager.Ratio; // Ratio.FourByThree;
+
+    if (width > height * ratio) {
+        canvas.height = Math.floor(height * 0.9);
+        canvas.width = Math.floor(canvas.height * ratio);
+    }
+    else {
+        canvas.width = Math.floor(width * 0.9);
+        canvas.height = Math.floor(canvas.width / ratio);
+    }
+
+    setCanvasSize();
+}
+
+function setCanvasSize() {
+    canvasCenter = {
+        x: canvas.width / 2,
+        y: canvas.height / 2,
+    };
+
+    rect = canvas.getBoundingClientRect();
+    root = document.documentElement;
+}
+
+
+function resize(evt) {
+    // store previous canvas dimensions
+    let previousCanvas = { width: canvas.width, height: canvas.height };
+
+    // resize to window
+    resizeCanvas();
+
+    // reset things here
+    // setCanvasSize();
+
+    // trigger resize in game
+    gameManager.ResizeGame(previousCanvas);
 }

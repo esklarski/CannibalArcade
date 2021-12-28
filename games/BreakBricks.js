@@ -25,6 +25,7 @@
 class BreakBricks extends Game {
     /** Game Title - Break Bricks */
     static #TITLE = "Break Bricks";
+    get ratio() {return Ratio.FourByThree;}
 
     /** Bounce off bottom wall too. */
     #practice = false;
